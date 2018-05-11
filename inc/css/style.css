@@ -1,0 +1,11 @@
+#debug {
+	border: 1px solid red;
+	background-color: lightred;
+}
+
+h2 {
+	text-align: center;
+	font-size: 1.5em;
+	border: 1px solid grey;
+	background-color: lightgrey;
+}
