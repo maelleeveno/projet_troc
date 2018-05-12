@@ -27,7 +27,7 @@ $contenu_gauche .= '<form method="post" action="">';
 
 	// Affichage du filtre des prix : 
 	$contenu_gauche .= '<label for="prixMax">Prix maximum</label>';
-	$contenu_gauche .= '<input id="prixMax" class="range" name="prixMax" type="range" class="form-control" min="0" max="10000" step="10" /><output class = "price_output"></output><br />';
+	$contenu_gauche .= '<input id="prixMax" class="range" name="prixMax" type="range" class="form-control" min="0" max="10000" step="100" /><output class = "price_output"></output><br />';
 
 
 
