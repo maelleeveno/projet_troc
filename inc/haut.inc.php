@@ -21,8 +21,11 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="<?php echo RACINE_SITE . 'bootstrap/css/bootstrap.css'; ?>" />
 
-		<!-- Fichier style 
+		<!-- Fichier style -->
 		<link rel="stylesheet" href="<?php echo RACINE_SITE . 'inc/css/style.css'; ?>" /> 
+
+		<!-- Fichier Js -->
+		<script src="<?php echo RACINE_SITE . 'inc/js/script.js'; ?>"></script>
 
 		<!--[if lt IE 9]> -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>	

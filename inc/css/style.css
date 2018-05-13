@@ -1,11 +1,37 @@
-#debug {
-	border: 1px solid red;
-	background-color: lightred;
+.rating {
+	width: 226px;
+	margin: 0 auto 1em;
+	font-size: 45px;
+	overflow:hidden;
 }
-
-h2 {
-	text-align: center;
-	font-size: 1.5em;
-	border: 1px solid grey;
-	background-color: lightgrey;
+.rating input {
+float: right;
+opacity: 0;
+position: absolute;
+}
+.rating a,
+.rating label {
+	float:right;
+	color: #aaa;
+	text-decoration: none;
+	-webkit-transition: color .4s;
+	-moz-transition: color .4s;
+	-o-transition: color .4s;
+	transition: color .4s;
+}
+.rating label:hover ~ label,
+.rating input:focus ~ label,
+.rating label:hover,
+.rating a:hover,
+.rating a:hover ~ a,
+.rating a:focus,
+.rating a:focus ~ a		{
+	color: orange;
+	cursor: pointer;
+}
+.rating2 {
+	direction: rtl;
+}
+.rating2 a {
+	float:none
 }

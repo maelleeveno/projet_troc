@@ -47,9 +47,7 @@ if (isset($_GET['id_membre'])) {
     $contenu .= '</div><br />';
     
     if(isConnected()) {
-        $contenu .= '<button><a href="">Laisser un avis à '. $membre['pseudo'] .' </a></button><hr />';
-    } else {
-        exit();
+        $contenu .= '<button><a href="avis.php">Laisser un avis à '. $membre['pseudo'] .' </a></button><hr />';
     }
 
     $contenu .= '<h4>Les avis reçus par '. $membre['pseudo'] .' : </h4>';

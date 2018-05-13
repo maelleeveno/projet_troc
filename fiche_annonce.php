@@ -86,7 +86,7 @@ echo $contenu;
 		</div>
 		
 		<div class="col-lg-3">
-			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?php echo $membre_actuel['pseudo'];?></p>
+			<p><a href="profil_membre.php?id_membre=<?php echo $membre_actuel['id_membre'] ?>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?php echo $membre_actuel['pseudo'];?></a></p>
 		</div>
 		
 		<div class="col-lg-3">
