@@ -34,23 +34,43 @@ if (isset($_GET['id_membre'])) {
 
 // -------------- Affichage ----------
 
+	// On récupère le membre : 
 	$resultat = executeReq("SELECT * FROM membre WHERE id_membre = :id_membre", 
-									   array(':id_membre' => $_GET['id_membre']));
-			$membre = $resultat->fetch(PDO::FETCH_ASSOC); 	 
+							array(':id_membre' => $_GET['id_membre']));
+	$membre = $resultat->fetch(PDO::FETCH_ASSOC); 
+	
+	// On récupère la note moyenne du membre : 
+	$resultat2 = executeReq("SELECT ROUND(AVG(note.note), 1) AS 'moyenne', COUNT(note.note) AS 'nbDeNotes' FROM note, membre WHERE note.membre_id2 = membre.id_membre ");
+	$noteMoyenne = $resultat2->fetch(PDO::FETCH_ASSOC);
 
 	$contenu .= '<div><h3>Profil de '. $membre['pseudo'] .'</h3><br />';
 
     $contenu .= '<p>Pseudo : ' . $membre['pseudo'] . '</p>';
 	$contenu .= '<p>Nom : ' . $membre['nom'] . '</p>';
     $contenu .= '<p>Prénom : ' . $membre['prenom'] . '</p>';
-    $contenu .= '<p>Note moyenne : (sur -NB DE NOTES- notes)</p>';
+    $contenu .= '<p>Note moyenne : ' . $noteMoyenne['moyenne'] . ' / 5 (sur '. $noteMoyenne['nbDeNotes'] .' notes reçues)</p>';
     $contenu .= '</div><br />';
     
     if(isConnected()) {
-        $contenu .= '<button><a href="avis.php">Laisser un avis à '. $membre['pseudo'] .' </a></button><hr />';
+        $contenu .= '<button><a href="avis.php?id_membre='. $membre['id_membre'] .'">Laisser un avis à '. $membre['pseudo'] .' </a></button><br /><br />';
     }
 
-    $contenu .= '<h4>Les avis reçus par '. $membre['pseudo'] .' : </h4>';
+	$contenu .= '<h4>Les avis reçus par '. $membre['pseudo'] .' : </h4><hr />';
+	
+
+		$resultat3 = executeReq("SELECT * FROM note"); 
+		while($avis = $resultat3->fetch(PDO::FETCH_ASSOC)) {
+
+			$resultat1 = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM note WHERE id_membre = membre_id1)");
+			$membre1 = $resultat1->fetch(PDO::FETCH_ASSOC);
+
+			$contenu .= '<p><strong>Avis déposé par '. $membre1['pseudo'] . ' le ' . $avis['date_enregistrement'] .'</strong></p>';
+			$contenu .= '<p>Note : '. $avis['note'] .' / 5</p>'; 
+			$contenu .= '<p>'. $avis['avis'] .'</p><hr />'; 
+		}
+
+
+		
 
 
 
