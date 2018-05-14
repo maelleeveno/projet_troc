@@ -65,7 +65,7 @@ if(isConnectedAndAdmin()) {
 						// Voir - modifier - suprimer 
 						// glyphicon-eye-open pour voir
 			$contenu .= '<td>
-							<a href="?action=suppression&id_annonce='. $note['id_note'] .'"  onclick="return(confirm(\'Êtes-vous certain de vouloir supprimer cette annonce ?\'));" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+							<a href="?action=suppression&id_note='. $note['id_note'] .'"  onclick="return(confirm(\'Êtes-vous certain de vouloir supprimer cette annonce ?\'));" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
 						</td>';
 			$contenu .= '</tr>';
             }		
