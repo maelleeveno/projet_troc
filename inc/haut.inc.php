@@ -101,6 +101,7 @@
 									echo '<a href="' . RACINE_SITE . 'admin/gestion_categories.php" class="dropdown-item">Gestion des catégories</a><br />';
 									echo '<a href="' . RACINE_SITE . 'admin/gestion_notes.php" class="dropdown-item">Gestion des notes</a><br />';
 									echo '<a href="' . RACINE_SITE . 'admin/gestion_commentaires.php" class="dropdown-item">Gestion des commentaires</a><br />';
+									echo '<a href="' . RACINE_SITE . 'admin/statistiques.php" class="dropdown-item">Statistiques</a><br/>';
 								echo '</div>';
 							echo '</li>';
 						} 
