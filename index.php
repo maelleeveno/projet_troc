@@ -8,8 +8,8 @@ $contenu_gauche .= '<form method="post" action="">';
 	$contenu_gauche .= '<label for="categorie_id">Catégories</label>';
 	$contenu_gauche .= '<select class="form-control" name="categorie_id">';
 		$contenu_gauche .= '<option value="all" class="list-group-item">Toutes les catégories</option>'; 
-		$resultat = executeReq("SELECT * FROM categorie");
-		while ($cat = $resultat->fetch(PDO::FETCH_ASSOC)) {
+		$resultatCat = executeReq("SELECT * FROM categorie");
+		while ($cat = $resultatCat->fetch(PDO::FETCH_ASSOC)) {
 			// debug($cat);
 			$contenu_gauche .= '<option value="'. $cat['id_categorie'] .'" class="list-group-item">'. $cat['titre'] .'</option>'; 
 		}
@@ -19,16 +19,19 @@ $contenu_gauche .= '<form method="post" action="">';
 	$contenu_gauche .= '<label for="ville">Villes</label>';
 	$contenu_gauche .= '<select class="form-control" name="ville">';
 		$contenu_gauche .= '<option value="all" class="list-group-item">Toutes les villes</option>';
-		$resultat = executeReq("SELECT DISTINCT(ville) FROM annonce ORDER BY ville");
-		while ($ville = $resultat->fetch(PDO::FETCH_ASSOC)) {
+		$resultatVille = executeReq("SELECT DISTINCT(ville) FROM annonce ORDER BY ville");
+		while ($ville = $resultatVille->fetch(PDO::FETCH_ASSOC)) {
 			$contenu_gauche .= '<option value="'. $ville['ville'] .'" class="list-group-item">'. $ville['ville'] .'</option>';
 		}
 	$contenu_gauche .= '</select><br />';
 
 	// Affichage du filtre des prix : 
 	$contenu_gauche .= '<label for="prixMax">Prix maximum</label>';
-	$contenu_gauche .= '<input id="prixMax" class="range" name="prixMax" type="range" class="form-control" min="0" max="10000" step="100" /><output class = "price_output"></output><br />';
-
+		$resultatPrix = executeReq("SELECT MAX(prix) FROM annonce");
+		$prixMax = $resultatPrix->fetch(PDO::FETCH_ASSOC);
+		foreach($prixMax as $indice => $information) {
+	$contenu_gauche .= '<input id="prixMax" class="range" name="prixMax" type="range" class="form-control" min="0" max="'. $information .'" step="100" /><output class = "price_output"></output><br />';
+		}
 
 
 	$contenu_gauche .= '<input type="submit" value="Rechercher" class="btn" />';
@@ -46,7 +49,7 @@ if(isset($_POST['categorie_id']) && $_POST['categorie_id'] != 'all'){
 	$donnees = executeReq("SELECT id_annonce, titre, description_courte, prix, photo, pays, ville, cp, categorie_id FROM annonce WHERE prix <= :prix", 
 							array(':prix' => $_POST['prixMax']));
 } elseif(isset($_POST['ville']) && $_POST['ville'] != 'all') {
-	$donnees = executeReq("SELECT id_annonce, titre, description_courte, prix, photo, pays, ville, cp, categorie_id FROM annonce WHERE categorie_id = :categorie_id AND prix <= :prix AND ville = :ville", 
+	$donnees = executeReq("SELECT id_annonce, titre, description_courte, prix, photo, pays, ville, cp, categorie_id FROM annonce WHERE ville = :ville", 
 							array(':ville' => $_POST['ville']));
 } else {
 	$donnees = executeReq("SELECT id_annonce, titre, description_courte, prix, photo, pays, ville, cp, categorie_id FROM annonce");
