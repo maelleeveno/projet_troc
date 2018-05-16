@@ -30,9 +30,8 @@ $contenu_gauche .= '<form method="post" action="">';
 		$resultatPrix = executeReq("SELECT MAX(prix) FROM annonce");
 		$prixMax = $resultatPrix->fetch(PDO::FETCH_ASSOC);
 		foreach($prixMax as $indice => $information) {
-	$contenu_gauche .= '<input id="prixMax" class="range" name="prixMax" type="range" class="form-control" min="0" max="'. $information .'" step="100" /><output class = "price_output"></output><br />';
+			$contenu_gauche .= '<input id="prixMax" class="range" name="prixMax" type="range" class="form-control" min="0" max="'. $information .'" step="100" /><output class = "price_output"></output><br />';
 		}
-
 
 	$contenu_gauche .= '<input type="submit" value="Rechercher" class="btn" />';
 
@@ -40,22 +39,45 @@ $contenu_gauche .= '</form>';
 debug($_POST);
 
 
+// Ajout d'un formulaire pour trier les annonces :  
+
+$contenu_droite .= '<form method="post" action="">';
+	$contenu_droite .= '<label for="tri">Trier les annonces</label>';
+	$contenu_droite .= '<select class="form-control" name="tri">';
+		$contenu_droite .= '<option value="croissant" class="list-group-item">Du - cher au + cher</option>';
+		$contenu_droite .= '<option value="decroissant" class="list-group-item">Du + cher au - cher</option>';
+		$contenu_droite .= '<option value="recent" class="list-group-item">Du plus récent au plus ancien</option>';
+		$contenu_droite .= '<option value="ancien" class="list-group-item">Du plus ancien au plus récent</option>';
+	$contenu_droite .= '</select><br />';
+	$contenu_droite .= '<input type="submit" value="Trier" class="btn" /><br /><br />';
+$contenu_droite .= '</form>';
+
+if(isset($_POST['tri'])) { 
+	if($_POST['tri'] == 'croissant') {
+		$resultat = executeReq("SELECT * FROM annonce ORDER BY prix");
+	}elseif($_POST['tri'] == 'decroissant') {
+		$resultat = executeReq("SELECT * FROM annonce ORDER BY prix DESC");
+	}elseif($_POST['tri'] == 'recent') {
+		$resultat = executeReq("SELECT * FROM annonce ORDER BY date_enregistrement DESC");
+	}elseif($_POST['tri'] == 'ancien') {
+		$resultat = executeReq("SELECT * FROM annonce ORDER BY date_enregistrement");
+	}
+}elseif(isset($_POST['categorie_id']) || isset($_POST['ville']) || isset($_POST['prixMax'])) {
+	if($_POST['categorie_id'] != 'all') {
+		$resultat = executeReq("SELECT * FROM annonce WHERE categorie_id = :categorie_id AND prix = :prixMax", array(':categorie_id' => $_POST['categorie_id'], ':prixMax' => $_POST['prixMax']));
+	}elseif($_POST['ville'] != 'all') {
+		$resultat = executeReq("SELECT * FROM annonce WHERE ville = :ville", array(':ville' => $_POST['ville'], ':prixMax' => $_POST['prixMax']));
+	}
+}else {
+	$resultat = executeReq("SELECT * FROM annonce");
+}
+
+
+
 // 2- Affichage des annonces en fonction de la catégorie choisie : 
 
-if(isset($_POST['categorie_id']) && $_POST['categorie_id'] != 'all'){
-	$donnees = executeReq("SELECT id_annonce, titre, description_courte, prix, photo, pays, ville, cp, categorie_id FROM annonce WHERE categorie_id = :categorie_id", 
-							array(':categorie_id' => $_POST['categorie_id']));
-} elseif(!empty($_POST['prixMax'])) {
-	$donnees = executeReq("SELECT id_annonce, titre, description_courte, prix, photo, pays, ville, cp, categorie_id FROM annonce WHERE prix <= :prix", 
-							array(':prix' => $_POST['prixMax']));
-} elseif(isset($_POST['ville']) && $_POST['ville'] != 'all') {
-	$donnees = executeReq("SELECT id_annonce, titre, description_courte, prix, photo, pays, ville, cp, categorie_id FROM annonce WHERE ville = :ville", 
-							array(':ville' => $_POST['ville']));
-} else {
-	$donnees = executeReq("SELECT id_annonce, titre, description_courte, prix, photo, pays, ville, cp, categorie_id FROM annonce");
-} 
 
-while($annonce = $donnees->fetch(PDO::FETCH_ASSOC)) {
+while($annonce = $resultat->fetch(PDO::FETCH_ASSOC)) {
 	// mise en forme de l'annonce :
 	$contenu_droite .= '<div class="col-sm-4">';
 		$contenu_droite .= '<div class="thumbnail">';
