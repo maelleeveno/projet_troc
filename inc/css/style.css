@@ -1,3 +1,14 @@
+/* NAV */
+nav {
+	padding: 0 10%;
+}
+
+body > div:nth-child(14) > div > div.col-md-9 > div > form {
+	width: 30%;
+}
+
+/* Notation éoiles --> avis.php */
+
 .rating {
 	width: 226px;
 	margin: 0 auto 1em;
@@ -34,4 +45,24 @@ position: absolute;
 }
 .rating2 a {
 	float:none
+}
+
+/* Affichage des annonces --> index.php */
+form.form-tri {
+	text-align: right;
+	margin-bottom: 50px;
+	display: flex;
+} 
+
+body > div:nth-child(2) > div > div.col-md-9 > div > div.row > form > input {
+	margin-left: 10px;
+	height: 34px;
+}
+
+body div.thumbnail {
+	height: 300px;
+}
+
+body img.vignette {
+	height: 150px;
 }

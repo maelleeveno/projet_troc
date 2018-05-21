@@ -1,6 +1,8 @@
 <?php
 require_once('inc/init.inc.php');
+
 // ------------- TRAITEMENT ---------------
+
 $contenu_gauche .= '<form method="post" action="">';
 	// Affichage du filtre des catégories : 
 	$contenu_gauche .= '<label for="categorie_id">Catégories</label>';
@@ -22,26 +24,27 @@ $contenu_gauche .= '<form method="post" action="">';
 		}
 	$contenu_gauche .= '</select><br />';
 	// Affichage du filtre des prix : 
-	$contenu_gauche .= '<label for="prixMax">Prix maximum</label>';
+	$contenu_gauche .= '<label for="prixMax">Prix maximum (en €)</label>';
 		$resultatPrix = executeReq("SELECT MAX(prix) FROM annonce");
 		$prixMax = $resultatPrix->fetch(PDO::FETCH_ASSOC);
 		foreach($prixMax as $indice => $information) {
 			$contenu_gauche .= '<input id="prixMax" class="range" name="prixMax" type="range" class="form-control" min="0" max="'. $information .'" step="50" /><output class = "price_output"></output><br />';
 		}
 	$contenu_gauche .= '<input type="submit" value="Rechercher" class="btn" />';
-$contenu_gauche .= '</form>';
-debug($_POST);
+$contenu_gauche .= '</form><br />';
+
 // Ajout d'un formulaire pour trier les annonces :  
-$contenu_droite .= '<form method="post" action="">';
-	$contenu_droite .= '<label for="tri">Trier les annonces</label>';
+$contenu_droite .= '<div class="row">';
+$contenu_droite .= '<form method="post" action="" class="col-sm-offset-8 col-sm-4 form-tri">';
 	$contenu_droite .= '<select class="form-control" name="tri">';
 		$contenu_droite .= '<option value="croissant" class="list-group-item">Du - cher au + cher</option>';
 		$contenu_droite .= '<option value="decroissant" class="list-group-item">Du + cher au - cher</option>';
 		$contenu_droite .= '<option value="recent" class="list-group-item">Du plus récent au plus ancien</option>';
 		$contenu_droite .= '<option value="ancien" class="list-group-item">Du plus ancien au plus récent</option>';
 	$contenu_droite .= '</select><br />';
-	$contenu_droite .= '<input type="submit" value="Trier" class="btn" /><br /><br />';
+	$contenu_droite .= '<input type="submit" value="Trier" class="btn btn-tri" /><br /><br />';
 $contenu_droite .= '</form>';
+$contenu_droite .= '</div>';
 
 
 if(isset($_GET['tri'])) { 
@@ -78,7 +81,7 @@ while( ($annonce = $resultat->fetch(PDO::FETCH_ASSOC)) && ($tri = $resultatTri->
 	$contenu_droite .= '<div class="col-sm-4">';
 		$contenu_droite .= '<div class="thumbnail">';
 			// image cliquable :
-			$contenu_droite .= '<a href="fiche_annonce.php?id_annonce='. $annonce['id_annonce'] .'"><img src="'. $annonce['photo'] .'" width="130" height="130" /></a>';
+			$contenu_droite .= '<a href="fiche_annonce.php?id_annonce='. $annonce['id_annonce'] .'"><img class="vignette" src="'. $annonce['photo'] .'" /></a>';
 			
 			// les infos de l'annonce :
 			$contenu_droite .= '<div class="caption">';
