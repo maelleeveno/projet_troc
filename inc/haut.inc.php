@@ -54,8 +54,8 @@
 				
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav nav-fill">
-						<li class="active nav-item"><a href="<?php echo RACINE_SITE . 'index.php'; ?>">Accueil</a></li>
-						<li class="nav-item"><a href="<?php RACINE_SITE . 'contact.php'; ?>">Contact</a></li>
+						<li class="nav-item"><a href="<?php echo RACINE_SITE . 'index.php'; ?>">Accueil</a></li>
+						<li class="nav-item"><a href="<?php echo RACINE_SITE . 'contact.php'; ?>">Contact</a></li>
 
 						<?php 
 						
