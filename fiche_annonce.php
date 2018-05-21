@@ -1,6 +1,10 @@
 <?php
 require_once('inc/init.inc.php');
 
+// Déclaration de variable :
+$suggestion = '';
+$commentaire = '';
+
 //-------------------- TRAITEMENT --------------------
 // 1- Contrôle de l'existence du produit demandé (un produit mis en favoris a pu être supprimé de la boutique) :
 
@@ -22,7 +26,7 @@ if (isset($_GET['id_annonce'])) {
 		// si existe l'id_annonce, je peux sélectionner le membre : 
 		$resultatPseudo = executeReq("SELECT * FROM membre, annonce WHERE membre.id_membre = annonce.membre_id AND id_annonce = :id_annonce", 
 								   array(':id_annonce' => $_GET['id_annonce']));
-		$membre_actuel = $resultatPseudo->fetch(PDO::FETCH_ASSOC); 	
+		$membre_actuel = $resultatPseudo->fetch(PDO::FETCH_ASSOC);
 		
 } else {
 	// l'indice "id_produit" n'existant pas, je redirige l'internaute vers la boutique :
@@ -30,18 +34,75 @@ if (isset($_GET['id_annonce'])) {
 	exit();
 }
 
+
+
+// Enregistrement du commentaire
+if(!empty($_POST)) {	
+
+	if(!isset($_POST['commentaire'])){
+		$contenu .= '<div class="bg-danger">Pas de commentaire</div>';
+	}
+	
+	if(empty($contenu)){
+		executeReq("INSERT INTO commentaire (membre_id, annonce_id, commentaire, date_enregistrement) VALUES (:membre, :annonce, :commentaire, NOW())",
+			array(	':membre'		=> $_SESSION['membre']['id_membre'],
+					':annonce'		=> $_GET['id_annonce'],
+					':commentaire' 	=> $_POST['commentaire']
+			));
+	}
+	
+}
+
+
+
+// Affichage des suggestions 
+$resultat = executeReq("SELECT * FROM annonce WHERE categorie_id = :categorie_id AND id_annonce <> :id_annonce ORDER BY RAND() LIMIT 4", array(':categorie_id' => $annonce['categorie_id'], ':id_annonce' => $_GET['id_annonce']));
+
+
+while ($vignette = $resultat->fetch(PDO::FETCH_ASSOC)) {
+	$suggestion .= 	'<div class="col-md-2">
+						<h4>' . $vignette['titre'] . '</h4>	
+						<a href="fiche_annonce.php?id_annonce= ' . $vignette['id_annonce'] . '">
+							<img style ="width:200px" class="img-responsive" src="' . $vignette['photo'] . '">
+						</a>
+					</div>';
+}
+
+
+
+// Affichage des commentaires
+	/* $resultatCommentaire = executeReq("SELECT * FROM commentaire WHERE annonce_id = $_GET['id_annonce']");
+	
+	while ($donnees = $resultatCommentaire->fetch())
+	{
+		$commentaire .= '<div class="col-md-12">
+							<h4>' . $SESSION['pseudo'] . '</h4>
+							<p> Le ' . $donnees[''] . ' <br>
+							' . $donnees['commentaire'] . '
+							</p>
+							<hr>
+						</div>';		
+	}*/
+
+	
+
+
 //-------------------- AFFICHAGE ----------------------
 require_once('inc/haut.inc.php');
 echo $contenu;
-?>
+?>	
 
 	<div class="row">
 		
-		<div class="col-lg-10">
+		<div class="col-lg-8">
 			<h1 class="page-header"><?php echo $annonce['titre']; ?></h1>
 		</div>
 		<div class="col-lg-2">
 			<input class="" type="button" value="Contacter <?php echo $membre_actuel['pseudo']; ?>" data-toggle="modal" data-target="#ModalContact">
+		</div>
+
+		<div class="col-lg-2">
+			<input class="" type="button" value="Une question à propos de l'annonce ?" data-toggle="modal" data-target="#ModalCommentaire">
 		</div>
 	
 		<div class="col-md-6">
@@ -62,13 +123,37 @@ echo $contenu;
 		<!-- Modal content-->
 		<div class="modal-content">
 		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<h4 class="modal-title">Modal Header</h4>
+			<h4 class="modal-title">Votre contact</h4>
 		  </div>
 		  <div class="modal-body">
-			<p>M admin <br>
-			<span>glyphicon glyphicon-phone-alt</span> : 0123456789<br>
-			<span>glyphicon glyphicon-envelope</span> : truc@mail.com</p>
+			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> : <?php echo $membre_actuel['pseudo']; ?><br>
+			<span class="glyphicon glyphicon-phone-alt"></span> : <?php echo $membre_actuel['telephone']; ?><br>
+			<span class="glyphicon glyphicon-envelope"></span> : <a href="mailto:<?php echo $membre_actuel['email']; ?>"><?php echo $membre_actuel['email']; ?></a></p>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+
+	  </div>
+	</div>	
+	
+	<!-- Modal -->
+	<div id="ModalCommentaire" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h4 class="modal-title">Laissez un commentaire à <?php echo $membre_actuel['pseudo']; ?> à propos de l'annonce " <?php echo $annonce['titre']; ?> "</h4>
+		  </div>
+		  <div class="modal-body">
+			
+			<form method="post" action="">
+				<textarea name="commentaire" id="commentaire" rows="7" cols="60"></textarea><br /><br />
+				<input type="submit" value="Publier" name="validation" class="btn" />
+			</form>
+
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -77,6 +162,9 @@ echo $contenu;
 
 	  </div>
 	</div>
+
+
+
 	
 	<br><br>
 	<div class="row">
@@ -86,7 +174,7 @@ echo $contenu;
 		</div>
 		
 		<div class="col-lg-3">
-			<p><a href="profil_membre.php?id_membre=<?php echo $membre_actuel['id_membre'] ?>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?php echo $membre_actuel['pseudo'];?></a></p>
+			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <a href="profil_membre.php?id_membre= <?php echo $annonce['membre_id']; ?> "><?php echo $membre_actuel['pseudo'];?></a></p>
 		</div>
 		
 		<div class="col-lg-3">
@@ -101,23 +189,45 @@ echo $contenu;
 	
 	<div class="row">
 		<div class="col-lg-12">
+			<br><a href="index.php">Retour vers votre sélection</a>
+		</div>
+	</div><!-- .row -->
+	
+	<div class="row">
+		<div class="col-lg-12">
 			<!-- plan -->
 		</div>
 	</div><!-- .row -->
 
-	<!-- Exercice : suggestions de produits -->
+	<!-- suggestions de produits -->
 	<div class="row">
 		<div class="col-lg-12">
-			<h3 class="page-header">Suggestions de produits</h3>
+			<h3 class="page-header">Produits similaires :</h3>
 		</div>
-		
 		<?php echo $suggestion; ?>
-		
 	</div>
-	
+
+	<div class="row">
+		<div class="col-lg-12">
+			<h3>Commentaires :</h3>
+			<?php 
+
+			$resultatCom = executeReq("SELECT * FROM commentaire WHERE annonce_id = :id_annonce", array(':id_annonce' => $_GET['id_annonce'])); 
+			while($commentaire = $resultatCom->fetch(PDO::FETCH_ASSOC)) {
+
+				$resultat = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM commentaire WHERE id_membre = membre_id)");
+				$membre = $resultat->fetch(PDO::FETCH_ASSOC);
+
+				echo '<p><strong>Avis déposé par '. $membre['pseudo'] . ' le ' . $commentaire['date_enregistrement'] .'</strong></p>';
+				echo '<p>'. $commentaire['commentaire'] .'</p><hr />'; 
+			}
+
+			?>
+		</div>
+	</div>
 		
 	<script>
-	<!-- jQuery qui permet d'afficher la modale de $contenu si elle existe : -->
+	// jQuery qui permet d'afficher la modale de $contenu si elle existe :
 		$(function(){
 			$("#myModal").modal("show");			
 		});
