@@ -47,7 +47,12 @@ if(isConnectedAndAdmin()) {
 			$contenu .= '<tr>';
 				// on parcourt les informations du tableau associatif $categorie : 
 				foreach($commentaire as $indice => $information) {
-					$contenu .= '<td>'. $information .'</td>';
+					if($indice == 'date_enregistrement') {
+						$information = date("d/m/Y à H:i:s");
+						$contenu .= '<td>' . $information . '</td>';
+					}else {
+						$contenu .= '<td>'. $information .'</td>';
+					}
 				}
 						
                 $contenu .= '<td>

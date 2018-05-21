@@ -56,7 +56,10 @@ if(isConnectedAndAdmin()) {
                             $contenu .= '<td>'. $membre1['pseudo'] .'</td>';
                         } elseif($indice == 'membre_id2') {
                             $contenu .= '<td>'. $membre2['pseudo'] . '</td>';
-                        }else {
+                        }elseif($indice == 'date_enregistrement') {
+							$information = date("d/m/Y à H:i:s");
+							$contenu .= '<td>' . $information . '</td>';
+						}else {
                             // pour les autres champs
                             $contenu .= '<td>'. $information .'</td>';
                         }

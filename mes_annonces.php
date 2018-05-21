@@ -146,6 +146,9 @@ if(isset($_GET['action']) && $_GET['action'] == 'affichage') {
 
 					if($indice == 'prix') {
 						$contenu .= '<td>' . $information . ' €</td>';
+					}elseif($indice == 'date_enregistrement') {
+						$information = date("d/m/Y à H:i:s");
+						$contenu .= '<td>' . $information . '</td>';
 					} elseif($indice == 'photo') {	// on met une balise <img /> pour la photo
 						$contenu .= '<td><img src="'. $information .'" width="90" height="90"/></td>';
 					} else {

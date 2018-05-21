@@ -43,7 +43,7 @@ if(isset($_GET['action']) && $_GET['action'] == "modifier_statut" && isset($_GET
 
 
 // 2- Préparation de l'affichage :
-$resultat = executeReq("SELECT id_membre, pseudo, nom, prenom, telephone, email, civilite, statut FROM membre");
+$resultat = executeReq("SELECT id_membre, pseudo, nom, prenom, telephone, email, date_enregistrement, civilite, statut FROM membre");
 $contenu .= '<h3> Membres inscrits </h3>';
 $contenu .=  "Nombre de membre(s) : " . $resultat->rowCount();
 
@@ -55,6 +55,7 @@ $contenu .=  '<table class="table"> <tr>';
 		$contenu .=  '<th> prenom </th>';
 		$contenu .=  '<th> telephone </th>';
 		$contenu .=  '<th> email </th>';
+		$contenu .=  '<th> Date d\'inscription </th>';
 		$contenu .=  '<th> civilite </th>';
 		$contenu .=  '<th> statut </th>';
 				
@@ -64,12 +65,15 @@ $contenu .=  '<table class="table"> <tr>';
 		$contenu .=  '</tr>';
 
 		// Affichage des lignes :
-		while ($membre = $resultat->fetch(PDO::FETCH_ASSOC))
-		{
+		while ($membre = $resultat->fetch(PDO::FETCH_ASSOC)){
 			$contenu .=  '<tr>';
-				foreach ($membre as $indice => $information)
-				{
-					$contenu .=  '<td>' . $information . '</td>';
+				foreach ($membre as $indice => $information){
+					if($indice == 'date_enregistrement') {
+						$information = date("d/m/Y à H:i:s");
+						$contenu .= '<td>' . $information . '</td>';
+					} else {
+						$contenu .=  '<td>' . $information . '</td>';
+					}
 				}
 				$contenu .=  '<td><a href="?action=supprimer_membre&id_membre=' . $membre['id_membre'] . '" onclick="return(confirm(\'Etes-vous sûr de vouloir supprimer ce membre?\'));"> <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
 				$contenu .=  '<td><a href="?action=modifier_statut&id_membre=' . $membre['id_membre'] . '&statut='. $membre['statut'] .'"> <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> </a></td>';

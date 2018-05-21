@@ -68,25 +68,6 @@ while ($vignette = $resultat->fetch(PDO::FETCH_ASSOC)) {
 					</div>';
 }
 
-
-
-// Affichage des commentaires
-	/* $resultatCommentaire = executeReq("SELECT * FROM commentaire WHERE annonce_id = $_GET['id_annonce']");
-	
-	while ($donnees = $resultatCommentaire->fetch())
-	{
-		$commentaire .= '<div class="col-md-12">
-							<h4>' . $SESSION['pseudo'] . '</h4>
-							<p> Le ' . $donnees[''] . ' <br>
-							' . $donnees['commentaire'] . '
-							</p>
-							<hr>
-						</div>';		
-	}*/
-
-	
-
-
 //-------------------- AFFICHAGE ----------------------
 require_once('inc/haut.inc.php');
 echo $contenu;
@@ -110,8 +91,11 @@ echo $contenu;
 		</div>
 		
 		<div class="col-md-6">
-			<h3>Description</h3>			
-			<p><?php echo $annonce['description_longue']; ?></p>
+			<h3>Description de l'annonce</h3>			
+			<p><?php echo $annonce['description_courte']; ?></p><br />
+
+			<a data-toggle="collapse" href="#infos" aria-expanded="false" aria-controls="infos"><h5><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Plus de renseignements</h5></a>
+			<div class="collapse" id="infos"><?php echo $annonce['description_longue']; ?></div>
 		</div>
 		
 	</div><!-- .row -->
@@ -170,7 +154,7 @@ echo $contenu;
 	<div class="row">
 	
 		<div class="col-lg-3">
-			<p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Date de publication : <?php echo $annonce['date_enregistrement']; ?></p>
+			<p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Publiée le <?php $annonce['date_enregistrement'] = date("d/m/Y à H:i:s"); echo $annonce['date_enregistrement']; ?></p>
 		</div>
 		
 		<div class="col-lg-3">
