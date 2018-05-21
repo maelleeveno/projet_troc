@@ -51,8 +51,6 @@ if(isConnectedAndAdmin()) {
 				}
 						
                 $contenu .= '<td>
-                                <a href="?action=modification&id_commentaire='. $commentaire['id_commentaire'] .'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-								
                                 <a href="?action=suppression&id_commentaire='. $commentaire['id_commentaire'] .'"  onclick="return(confirm(\'Êtes-vous certain de vouloir supprimer ce commentaire ?\'));" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
                             </td>';
                 $contenu .= '</tr>';
