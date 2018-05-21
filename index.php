@@ -68,7 +68,7 @@ if(isset($_POST['categorie_id']) || isset($_POST['ville'])) {
 		$resultat = executeReq("SELECT * FROM annonce WHERE ville = :ville AND prix <= :prixMax", array(':ville' => $_POST['ville'], ':prixMax' => $_POST['prixMax']));
 	}
 }else {
-	$resultat = executeReq("SELECT * FROM annonce");
+	$resultat = executeReq("SELECT * FROM annonce ORDER BY date_enregistrement DESC");
 }
 
 
