@@ -55,24 +55,7 @@
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav nav-fill">
 						<li class="active nav-item"><a href="<?php echo RACINE_SITE . 'index.php'; ?>">Accueil</a></li>
-						<li class="nav-item dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >Catégories <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>
-							
-							<div class="dropdown-menu">
-								<a class="dropdown-item" href="#">Emploi</a><br />
-								<a class="dropdown-item" href="#">Véhicule</a><br />
-								<a class="dropdown-item" href="#">Immobilier</a><br />
-								<a class="dropdown-item" href="#">Vacances</a><br />
-								<a class="dropdown-item" href="#">Multimedia</a><br />
-								<a class="dropdown-item" href="#">Loisirs</a><br />
-								<a class="dropdown-item" href="#">Matériel</a><br />
-								<a class="dropdown-item" href="#">Services</a><br />
-								<a class="dropdown-item" href="#">Maison</a><br />
-								<a class="dropdown-item" href="#">Vêtements</a><br />
-								<a class="dropdown-item" href="#">Autres</a>
-							</div>
-						</li>
-						<li class="nav-item"><a href="">Contact</a></li>
+						<li class="nav-item"><a href="<?php RACINE_SITE . 'contact.php'; ?>">Contact</a></li>
 
 						<?php 
 						
