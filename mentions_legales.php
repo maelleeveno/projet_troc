@@ -1,6 +1,6 @@
 <?php
 require_once('inc/init.inc.php');
-
+// ------------- TRAITEMENT ---------------
 
 // -------------- AFFICHAGE ---------------
 require_once('inc/haut.inc.php');
@@ -18,7 +18,7 @@ Conformément aux dispositions des articles 6-III et 19 de la Loi n° 2004-575 d
 <p style="text-align:justify">Statut du propriétaire : <strong>societe</strong><br />
 Préfixe : <strong>SAS</strong><br />
 Nom de la Société :<strong> Le bon troc</strong><br />
-Adresse : <strong>12 avenue de par la bas 75010 Paris</strong><br />
+Adresse : <strong>25 rue Mademoiselle, 75015 Paris France</strong><br />
 Tél  : <strong>0123456789</strong><br />
 Au Capital de :<strong> 150000 €</strong><br />
 SIRET :  <strong>00000000000000   </strong>R.C.S. :<strong> 0000000000</strong><br />
@@ -32,7 +32,7 @@ Le responsable de la publication est une <strong>personne physique</strong><br /
 <br />
 Le Webmaster est  : <strong>webmaster</strong><br />
 Contactez le Webmaster : <strong><a href="admin@lebontroc.com?subject=Contact ï¿½ partir des mentions lï¿½gales via le site www.lebontroc.com">admin@lebontroc.com</a></strong><br />
-L’hebergeur du site est : <strong>12 rue d'ici 75012 Paris</strong><br /></p>
+L’hebergeur du site est : <strong>25 rue Mademoiselle, 75015 Paris France</strong><br /></p>
 
 <p style="text-align:justify"> </p>
 
@@ -81,4 +81,3 @@ Le site <a href="http://www.lebontroc.com" target="_blank">www.lebontroc.com</a>
 
 <?php 
 require_once('inc/bas.inc.php');
-?>
