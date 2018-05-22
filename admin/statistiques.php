@@ -22,7 +22,7 @@ echo $contenu ;
 
 <?php 
 if(isConnectedAndAdmin()) {
-    $resultat1 = executeReq("SELECT DISTINCT(membre.pseudo) as 'membre', AVG(note.note) as 'note'
+    $resultat1 = executeReq("SELECT DISTINCT(membre.pseudo) as 'membre', ROUND(AVG(note.note),1) as 'note'
                              FROM membre
                              LEFT JOIN note ON membre.id_membre = note.membre_id2
                              GROUP BY membre.pseudo
