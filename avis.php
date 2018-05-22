@@ -3,6 +3,13 @@
 require_once('inc/init.inc.php');
 
 // ----------- TRAITEMENT ------------
+
+// 1- Vérification que le membre est connecté : 
+    if(!isConnected()) {
+        header('location:connexion.php');
+        exit();	// on quitte le script.
+    }
+
 if(!empty($_POST)) {
     if( !isset($_POST['note']) || !preg_match('/^[1-5]{1}$/', $_POST['note']) ) {
         $contenu .= '<div class="bg-danger">Veuillez laisser une note.</div>';
@@ -34,27 +41,25 @@ $membre2 = $resultat->fetch(PDO::FETCH_ASSOC);
 require_once('inc/haut.inc.php');
 echo $contenu;
 
-debug($_POST);
-
 ?>
 
 <h2>Laissez un avis à <?php echo $membre2['pseudo'] ?></h2>
 
 <form method="post" action="" class="col-lg-offset-4 col-lg-4">
+
+
+    <label for="avis">Laissez un avis à <?php echo $membre2['pseudo'] ?> </label>
+    <textarea name="avis" id="avis" class="form-control" rows="5" value="" required></textarea><br />
+
     
     <div>Donnez une note à <?php echo $membre2['pseudo'] ?></div>
 	<div class="rating">
-        <input name="note" id="e5" type="radio" value="5"><label for="e5">☆</label>
-		<input name="note" id="e4" type="radio" value="4"><label for="e4">☆</label>
-		<input name="note" id="e3" type="radio" value="3"><label for="e3">☆</label>
-		<input name="note" id="e2" type="radio" value="2"><label for="e2">☆</label>
-		<input name="note" id="e1" type="radio" value="1"><label for="e1">☆</label>
+        <input name="note" id="e5" type="radio" value="5"><label for="e5"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></label>
+		<input name="note" id="e4" type="radio" value="4"><label for="e4"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></label>
+		<input name="note" id="e3" type="radio" value="3"><label for="e3"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></label>
+		<input name="note" id="e2" type="radio" value="2"><label for="e2"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></label>
+		<input name="note" id="e1" type="radio" value="1"><label for="e1"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></label>
     </div>
-
-    <label for="avis">Laissez un avis à <?php echo $membre2['pseudo'] ?> </label>
-    <input type="text" name="avis" id="avis" class="form-control" value="" required /><br />
-
-
 
     <input type="submit" value="Enregistrer" class="btn" />
 </form>
