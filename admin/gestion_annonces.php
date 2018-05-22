@@ -57,9 +57,6 @@ if(isConnectedAndAdmin()) {
 				foreach($annonce as $indice => $information) {
 					if($indice =='description_longue' && strlen($information) >= 70) {
 						$contenu .= '<td>' .substr($information, 0, 70) . ' [...]</td>';
-					}elseif($indice == 'date_enregistrement') {
-						$information = date("d/m/Y à H:i:s");
-						$contenu .= '<td>' . $information . '</td>';
 					}elseif($indice == 'photo') {	// on met une balise <img /> pour la photo
 						$contenu .= '<td><img src="../'. $information .'" width="90" height="90"/></td>';
 					} else {

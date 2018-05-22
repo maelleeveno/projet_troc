@@ -19,23 +19,27 @@ if(!empty($_POST)) {
     }
 
     if (empty($contenu)) {
-        $membre1 = $_SESSION['membre']['id_membre'];
-        $membre2 = $_GET['id_membre'];
+        
+        $resultat = executeReq("SELECT * FROM membre WHERE id_membre = :id_membre",
+        array(':id_membre' => $_GET['membre_id']));
+        $membre2 = $resultat->fetch(PDO::FETCH_ASSOC);
+        
         executeReq("INSERT INTO note (note, avis, date_enregistrement, membre_id1, membre_id2) VALUES (:note, :avis, NOW(), :membre_id1, :membre_id2)", 
                         array(':note'  		=> $_POST['note'],
                               ':avis'       => $_POST['avis'],
-                              ':membre_id1' => $membre1,
-                              ':membre_id2' => $membre2
+                              ':membre_id1' => $_SESSION['membre']['id_membre'],
+                              ':membre_id2' => $membre2['id_membre']
                         ));
-                        $contenu .= '<div class="bg-success">Votre avis a bien été enregistré. Retournez sur le <a href="profil_membre.php?id_membre='. $membre2 .'">profil du membre.</a></div>';
+                        $contenu .= '<div class="bg-success">Votre avis a bien été enregistré. Retournez sur le <a href="mon_compte.php?membre_id='. $_GET['membre_id'] .'">profil du membre.</a></div>';
 	}
 
 }
 
-$resultat = executeReq("SELECT * FROM membre WHERE id_membre = :id_membre",
-                      array(':id_membre' => $_GET['id_membre']));
-$membre2 = $resultat->fetch(PDO::FETCH_ASSOC);
+debug($_POST);
 
+$resultat = executeReq("SELECT * FROM membre WHERE id_membre = :id_membre",
+array(':id_membre' => $_GET['membre_id']));
+$membre2 = $resultat->fetch(PDO::FETCH_ASSOC);
 
 // ----------- AFFICHAGE -------------
 require_once('inc/haut.inc.php');

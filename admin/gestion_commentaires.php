@@ -35,11 +35,11 @@ if(isConnectedAndAdmin()) {
 		// Affichage des entêtes du tableau :
 		$contenu .= '<tr>';
 			$contenu .= '<th>id_commentaire</th>';
-			$contenu .= '<th>membre_id</th>';
-			$contenu .= '<th>annonce_id</th>';
 			$contenu .= '<th>commentaire</th>';
 			$contenu .= '<th>date_enregistrement</th>';
-			$contenu .= '<th>Action</th>';
+			$contenu .= '<th>membre_id</th>';
+			$contenu .= '<th>annonce_id</th>';
+			$contenu .= '<th>Supprimer</th>';
 		$contenu .= '</tr>';
 		
 		// affichage des lignes du tableau : 
@@ -47,12 +47,7 @@ if(isConnectedAndAdmin()) {
 			$contenu .= '<tr>';
 				// on parcourt les informations du tableau associatif $categorie : 
 				foreach($commentaire as $indice => $information) {
-					if($indice == 'date_enregistrement') {
-						$information = date("d/m/Y à H:i:s");
-						$contenu .= '<td>' . $information . '</td>';
-					}else {
-						$contenu .= '<td>'. $information .'</td>';
-					}
+					$contenu .= '<td>'. $information .'</td>';
 				}
 						
                 $contenu .= '<td>

@@ -79,11 +79,11 @@ echo $contenu;
 			<h1 class="page-header"><?php echo $annonce['titre']; ?></h1>
 		</div>
 		<div class="col-lg-2">
-			<input class="" type="button" value="Contacter <?php echo $membre_actuel['pseudo']; ?>" data-toggle="modal" data-target="#ModalContact">
+			<input class="btn" type="button" value="Contacter <?php echo $membre_actuel['pseudo']; ?>" data-toggle="modal" data-target="#ModalContact">
 		</div>
 
 		<div class="col-lg-2">
-			<input class="" type="button" value="Une question à propos de l'annonce ?" data-toggle="modal" data-target="#ModalCommentaire">
+			<input class="btn" type="button" value="Une question à propos de l'annonce ?" data-toggle="modal" data-target="#ModalCommentaire">
 		</div>
 	
 		<div class="col-md-6">

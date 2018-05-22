@@ -25,6 +25,8 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 // 2- Affichage des notes
 if(isConnectedAndAdmin()) {
 	$resultat = executeReq("SELECT * FROM note"); // sélectionne tous les produits 
+
+	$contenu .= '<h3>Gestion des notes et avis </h3>';
 	
 	$contenu .= 'Nombre de notes enregistrées :  ' . $resultat->rowCount();
 	$contenu .= '<table class="table">';
@@ -44,10 +46,10 @@ if(isConnectedAndAdmin()) {
 			$contenu .= '<tr>';
                     foreach($note as $indice => $information) {
                      
-                        $resultat1 = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM note WHERE id_membre = membre_id1)");
+                        $resultat1 = executeReq("SELECT * FROM membre, note WHERE membre.id_membre = note.membre_id1");
                         $membre1 = $resultat1->fetch(PDO::FETCH_ASSOC);
 
-                        $resultat2 = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM note WHERE id_membre = membre_id2)");
+                        $resultat2 = executeReq("SELECT * FROM membre, note WHERE membre.id_membre = note.membre_id2");
                         $membre2 = $resultat2->fetch(PDO::FETCH_ASSOC);
 
                         if($indice == 'note') {	
@@ -56,10 +58,7 @@ if(isConnectedAndAdmin()) {
                             $contenu .= '<td>'. $membre1['pseudo'] .'</td>';
                         } elseif($indice == 'membre_id2') {
                             $contenu .= '<td>'. $membre2['pseudo'] . '</td>';
-                        }elseif($indice == 'date_enregistrement') {
-							$information = date("d/m/Y à H:i:s");
-							$contenu .= '<td>' . $information . '</td>';
-						}else {
+                        }else {
                             // pour les autres champs
                             $contenu .= '<td>'. $information .'</td>';
                         }

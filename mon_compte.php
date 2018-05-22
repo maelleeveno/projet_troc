@@ -164,7 +164,7 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 		$contenu .= '<p>Note moyenne : ' . $noteMoyenne['moyenne'] . ' / 5 (sur '. $noteMoyenne['nbDeNotes'] .' notes reçues)</p>';
 		$contenu .= '</div><br />';
 
-		$contenu .= '<button><a href="avis.php?id_membre='. $membre['id_membre'] .'">Laisser un avis à '. $membre['pseudo'] .' </a></button><br /><br />';
+		$contenu .= '<button class="btn"><a href="avis.php?membre_id='. $membre['id_membre'] .'">Laisser un avis à '. $membre['pseudo'] .' </a></button><br /><br />';
 
 		$contenu .= '<h4>Les avis reçus par '. $membre['pseudo'] .' : </h4><hr />';
 
