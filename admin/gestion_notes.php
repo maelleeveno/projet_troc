@@ -26,6 +26,10 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 if(isConnectedAndAdmin()) {
 	$resultat = executeReq("SELECT * FROM note"); // sélectionne tous les produits 
 
+	$resultat1 = executeReq("SELECT * FROM membre, note WHERE membre.id_membre = note.membre_id1");
+	$membre1 = $resultat1->fetch(PDO::FETCH_ASSOC);
+
+
 	$contenu .= '<h3>Gestion des notes et avis </h3>';
 	
 	$contenu .= 'Nombre de notes enregistrées :  ' . $resultat->rowCount();
@@ -36,8 +40,8 @@ if(isConnectedAndAdmin()) {
 			$contenu .= '<th>note</th>';
 			$contenu .= '<th>avis</th>';
 			$contenu .= '<th>date_enregistrement</th>';
-			$contenu .= '<th>membre_id1</th>';
-			$contenu .= '<th>membre_id2</th>';
+			$contenu .= '<th>membre acheteur</th>';
+			$contenu .= '<th>membre vendeur</th>';
 			$contenu .= '<th>Action</th>';
 		$contenu .= '</tr>';
 		
@@ -45,23 +49,22 @@ if(isConnectedAndAdmin()) {
 		while($note = $resultat->fetch(PDO::FETCH_ASSOC)) {
 			$contenu .= '<tr>';
                     foreach($note as $indice => $information) {
-                     
-                        $resultat1 = executeReq("SELECT * FROM membre, note WHERE membre.id_membre = note.membre_id1");
-                        $membre1 = $resultat1->fetch(PDO::FETCH_ASSOC);
 
-                        $resultat2 = executeReq("SELECT * FROM membre, note WHERE membre.id_membre = note.membre_id2");
-                        $membre2 = $resultat2->fetch(PDO::FETCH_ASSOC);
-
-                        if($indice == 'note') {	
-                            $contenu .= '<td> '. $information .' / 5 </td>';
-                        } elseif($indice == 'membre_id1') {
-                            $contenu .= '<td>'. $membre1['pseudo'] .'</td>';
-                        } elseif($indice == 'membre_id2') {
-                            $contenu .= '<td>'. $membre2['pseudo'] . '</td>';
-                        }else {
-                            // pour les autres champs
-                            $contenu .= '<td>'. $information .'</td>';
-                        }
+                        if(empty($information)) {
+							$contenu .= '<td>Membre supprimé</td>';
+						}elseif($indice == 'id_note') {
+							$contenu .= '<td> '. $information .' </td>';
+						}elseif($indice == 'note') {
+							$contenu .= '<td> '. $information .' / 5 </td>';
+						}elseif($indice == 'avis') {
+							$contenu .= '<td> '. $information .' </td>';
+						}elseif($indice == 'date_enregistrement') {
+							$contenu .= '<td> '. $information .' </td>';
+						}elseif($indice == 'membre_id1') {
+							$contenu .= '<td>' . $information . '</td>';
+						}elseif($indice == 'membre_id2') {
+							$contenu .= '<td>' . $information . '</td>';
+						}
                     }
 							
 						// Voir - modifier - suprimer 

@@ -24,7 +24,7 @@ if (isset($_GET['id_annonce'])) {
 	extract($annonce);  // crée des variables nommées comme les indices de l'array et qui prennent pour valeur les valeurs correspondantes dans l'array. On peut faire extract car on n'est pas dans une boucle.
 
 	// si existe l'id_annonce, je peux sélectionner le membre : 
-	$resultatPseudo = executeReq("SELECT * FROM membre, annonce WHERE membre.id_membre = annonce.membre_id AND id_annonce = :id_annonce", 
+	$resultatPseudo = executeReq("SELECT * FROM membre, annonce WHERE membre.id_membre = annonce.membre_id AND annonce.id_annonce = :id_annonce", 
 									array(':id_annonce' => $_GET['id_annonce']));
 	$membre_actuel = $resultatPseudo->fetch(PDO::FETCH_ASSOC);
 		

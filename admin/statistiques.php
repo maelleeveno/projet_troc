@@ -27,7 +27,7 @@ if(isConnectedAndAdmin()) {
                              LEFT JOIN note ON membre.id_membre = note.membre_id2
                              GROUP BY membre.pseudo
                              ORDER BY AVG(note.note) DESC
-                             LIMIT 5;");
+                             LIMIT 5");
 
     echo '<div class="collapse" id="top5notes">';
 
