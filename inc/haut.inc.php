@@ -64,7 +64,7 @@
 							echo '<li class="nav-item dropdown">';
 								echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Mon compte <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>';
 								echo '<div class="dropdown-menu">';
-									echo '<a href="' . RACINE_SITE . 'mon_compte.php">Mon profil</a><br />';
+									echo '<a href="' . RACINE_SITE . 'mon_compte.php?membre_id='. $_SESSION['membre']['id_membre'] .'">Mon profil</a><br />';
 									echo '<a href="' . RACINE_SITE . 'mes_annonces.php">Mes annonces</a>';
 								echo '</div>';
 							echo '</li>';

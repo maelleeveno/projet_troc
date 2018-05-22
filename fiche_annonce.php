@@ -23,10 +23,10 @@ if (isset($_GET['id_annonce'])) {
 	// debug($produit);
 	extract($annonce);  // crée des variables nommées comme les indices de l'array et qui prennent pour valeur les valeurs correspondantes dans l'array. On peut faire extract car on n'est pas dans une boucle.
 
-		// si existe l'id_annonce, je peux sélectionner le membre : 
-		$resultatPseudo = executeReq("SELECT * FROM membre, annonce WHERE membre.id_membre = annonce.membre_id AND id_annonce = :id_annonce", 
-								   array(':id_annonce' => $_GET['id_annonce']));
-		$membre_actuel = $resultatPseudo->fetch(PDO::FETCH_ASSOC);
+	// si existe l'id_annonce, je peux sélectionner le membre : 
+	$resultatPseudo = executeReq("SELECT * FROM membre, annonce WHERE membre.id_membre = annonce.membre_id AND id_annonce = :id_annonce", 
+									array(':id_annonce' => $_GET['id_annonce']));
+	$membre_actuel = $resultatPseudo->fetch(PDO::FETCH_ASSOC);
 		
 } else {
 	// l'indice "id_produit" n'existant pas, je redirige l'internaute vers la boutique :
@@ -158,7 +158,7 @@ echo $contenu;
 		</div>
 		
 		<div class="col-lg-3">
-			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <a href="profil_membre.php?id_membre= <?php echo $annonce['membre_id']; ?> "><?php echo $membre_actuel['pseudo'];?></a></p>
+			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <a href="mon_compte.php?membre_id= <?php echo $annonce['membre_id']; ?> "><?php echo $membre_actuel['pseudo'];?></a></p>
 		</div>
 		
 		<div class="col-lg-3">
@@ -173,7 +173,7 @@ echo $contenu;
 	
 	<div class="row">
 		<div class="col-lg-12">
-			<br><a href="index.php">Retour vers votre sélection</a>
+			<br><a href="index.php">Retour vers les annonces</a>
 		</div>
 	</div><!-- .row -->
 	
