@@ -35,7 +35,7 @@ $contenu_gauche .= '</form><br />';
 
 // Ajout d'un formulaire pour trier les annonces :  
 $contenu_droite .= '<div class="row">';
-$contenu_droite .= '<form method="post" action="" class="col-sm-offset-8 col-sm-4 form-tri">';
+$contenu_droite .= '<form method="get" action="" class="col-sm-offset-8 col-sm-4 form-tri">';
 	$contenu_droite .= '<select class="form-control" name="tri">';
 		$contenu_droite .= '<option value="croissant" class="list-group-item">Du - cher au + cher</option>';
 		$contenu_droite .= '<option value="decroissant" class="list-group-item">Du + cher au - cher</option>';
