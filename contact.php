@@ -108,13 +108,13 @@ if (isset($_POST['envoi']))
 		}
 		else
 		{
-			$contenu .= '<p class="bg-alert">'.$message_non_envoye.'</p>';
+			$contenu .= '<p class="bg-danger">'.$message_non_envoye.'</p>';
 		};
 	}
 	else
 	{
 		// une des 3 variables (ou plus) est vide ...
-		$contenu .= '<p class="bg-alert">'.$message_formulaire_invalide.'</p>';
+		$contenu .= '<p class="bg-danger">'.$message_formulaire_invalide.'</p>';
 		$err_formulaire = true;
 	};
 }; // fin du if (!isset($_POST['envoi']))
