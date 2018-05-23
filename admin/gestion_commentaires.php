@@ -28,7 +28,10 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 
 // 2- Affichage des commentaires
 if(isConnectedAndAdmin()) {
-	$resultat = executeReq("SELECT * FROM commentaire"); // sélectionne tous les produits 
+	$resultat = executeReq("SELECT commentaire.id_commentaire, commentaire.commentaire, commentaire.date_enregistrement, membre.pseudo, annonce.titre 
+						    FROM annonce 
+							LEFT JOIN membre ON annonce.membre_id = membre.id_membre
+							RIGHT JOIN commentaire ON annonce.id_annonce = commentaire.annonce_id"); // sélectionne tous les produits 
 
 	$contenu .= 'Nombre de commentaire :  ' . $resultat->rowCount();
 	$contenu .= '<table class="table">';
@@ -47,7 +50,17 @@ if(isConnectedAndAdmin()) {
 			$contenu .= '<tr>';
 				// on parcourt les informations du tableau associatif $categorie : 
 				foreach($commentaire as $indice => $information) {
-					$contenu .= '<td>'. $information .'</td>';
+					if($indice == 'pseudo' && empty($information)) {
+						$contenu .= '<td>Membre supprimé</td>';
+					}elseif($indice == 'titre' && empty($information)) {
+						$contenu .= '<td>Annonce supprimée</td>';
+					}elseif($indice == 'titre') {
+						$resultatAnnonce = executeReq("SELECT * FROM annonce");
+						$idAnnonce = $resultatAnnonce->fetch(PDO::FETCH_ASSOC);
+						$contenu .= '<td><a href="../fiche_annonce.php?id_annonce='. $idAnnonce['id_annonce'] .'">' . $information . '</a></td>'; 
+					}else {
+						$contenu .= '<td>' . $information . '</td>';
+					}
 				}
 						
                 $contenu .= '<td>

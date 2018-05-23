@@ -42,10 +42,9 @@ if(!empty($_POST)) {	// si le formulaire est soumis
 	
 	// Enregistrement de la catégorie : 
 	executeReq("REPLACE INTO categorie
-					VALUE(:id_categorie, :titre, :motscles)", 
+					VALUE(id_categorie, :titre, :motscles)", 
 					
-					array( ':id_categorie' 	=> $_POST['id_categorie'], 
-						   ':titre'			=> $_POST['titre'],
+					array( ':titre'			=> $_POST['titre'],
 						   ':motscles'	    => $_POST['motscles']
 					));
 	

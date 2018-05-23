@@ -69,6 +69,7 @@ if(isConnectedAndAdmin()) {
 	                         FROM membre
 	                         LEFT JOIN note ON membre.id_membre = note.membre_id1
 	                         GROUP BY membre.pseudo
+                             ORDER BY COUNT(note.avis) DESC
 	                         LIMIT 5;");
 
     echo '<div class="collapse" id="top5membres">';

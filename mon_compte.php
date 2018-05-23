@@ -85,12 +85,10 @@ if(!empty($_POST)) {
 		}
 
 		// Enregistrement des modifications du membre : 
-		executeReq("REPLACE INTO membre
-		VALUE(:id_membre, :pseudo, :mdp, :nom, :prenom, :telephone, :email, :civilite, :statut, :date_enregistrement)", 
+		executeReq("UPDATE membre SET id_membre=id_membre, pseudo=:pseudo, mdp=:mdp, nom=:nom, prenom=:prenom, telephone=:telephone, email=:email, civilite=:civilite, statut=:statut, date_enregistrement=:date_enregistrement WHERE id_membre=:id_membre", 
 		// on doit bien mettre dans le même ordre que la table "annonce" de la BDD car on n'a pas spécifié les champs concernés dans une première paire de parenthèses. 
 		
-		array( ':id_membre' 			=> $_SESSION['membre']['id_membre'], 
-			   ':pseudo'				=> $_POST['pseudo'],
+		array( ':pseudo'				=> $_POST['pseudo'],
 			   ':mdp'					=> $_SESSION['membre']['mdp'],
 			   ':nom'					=> $_POST['nom'],
 			   ':prenom'				=> $_POST['prenom'],
@@ -98,7 +96,8 @@ if(!empty($_POST)) {
 			   ':email'					=> $_POST['email'],
 			   ':civilite'				=> $_SESSION['membre']['civilite'],
 			   ':statut'				=> $_SESSION['membre']['statut'],
-			   ':date_enregistrement'	=> $_SESSION['membre']['date_enregistrement']
+			   ':date_enregistrement'	=> $_SESSION['membre']['date_enregistrement'],
+			   ':id_membre'				=> $_GET['membre_id']
 		));
 
 $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !</div>';

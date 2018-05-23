@@ -74,6 +74,10 @@ echo $contenu;
 ?>	
 
 	<div class="row">
+
+		<div class="col-lg-6">
+			<br><a href="index.php"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Retour vers les annonces</a>
+		</div>
 		
 		<div class="col-lg-8">
 			<h1 class="page-header"><?php echo $annonce['titre']; ?></h1>
@@ -170,12 +174,7 @@ echo $contenu;
 		</div>
 	
 	</div><!-- .row -->
-	
-	<div class="row">
-		<div class="col-lg-12">
-			<br><a href="index.php">Retour vers les annonces</a>
-		</div>
-	</div><!-- .row -->
+
 	
 	<div class="row">
 		<div class="col-lg-12">
