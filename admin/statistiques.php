@@ -45,7 +45,7 @@ if(isConnectedAndAdmin()) {
                 $nbNotes = $resultat1bis->fetch(PDO::FETCH_ASSOC);
     
                 if($indice == 'note') {
-                    echo '<td>' . $information . ' / 5 (basé sur '. $nbNotes['total'] .' avis)</td>'; 
+                    echo '<td>' . $information . ' / 5 </td>'; 
                 } elseif($indice == 'note' && $indice == NULL) {
                     echo '<td>Aucune note.</td>';
                 } 
