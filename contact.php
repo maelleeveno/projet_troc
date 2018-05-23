@@ -18,11 +18,11 @@ $copie = 'oui';
 $form_action = '';
  
 // Messages de confirmation du mail
-$message_envoye = "Votre message nous est bien parvenu !";
-$message_non_envoye = "L'envoi du mail a échoué, veuillez réessayer SVP.";
+$message_envoye = '<p class="bg-success">Votre message nous est bien parvenu !</p>';
+$message_non_envoye = '<p class="bg-danger">L\'envoi du mail a échoué, veuillez réessayer SVP.</p>';
  
 // Message d'erreur du formulaire
-$message_formulaire_invalide = "Vérifiez que tous les champs soient bien remplis et que l'email soit sans erreur.";
+$message_formulaire_invalide = '<p class="bg-danger"> Vérifiez que tous les champs soient bien remplis et que l\'email soit sans erreur.</p>';
  
 /*
 	********************************************************************************************
