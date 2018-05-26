@@ -27,25 +27,24 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 // 2- Affichage des annonces
 if(isConnectedAndAdmin()) {
 	$resultat = executeReq("SELECT * FROM annonce"); // sélectionne tous les produits 
-	$membre = executeReq("SELECT prenom, nom FROM membre WHERE id_membre IN (SELECT id_membre FROM annonce WHERE id_membre = membre_id)");
 	
 	$contenu .= 'Nombre d\'annonces publiées :  ' . $resultat->rowCount();
 	$contenu .= '<table class="table">';
 		// Affichage des entêtes du tableau :
 		$contenu .= '<tr>';
-			$contenu .= '<th>id_annonce</th>';
-			$contenu .= '<th>titre</th>';
-			$contenu .= '<th>description_courte</th>';
-			$contenu .= '<th>description_longue</th>';
-			$contenu .= '<th>prix</th>';
-			$contenu .= '<th>photo</th>';
-			$contenu .= '<th>pays</th>';
-			$contenu .= '<th>ville</th>';
-			$contenu .= '<th>adresse</th>';
-			$contenu .= '<th>cp</th>';
-			$contenu .= '<th>date_enregistrement</th>';
-			$contenu .= '<th>membre_id</th>';
-			$contenu .= '<th>categorie_id</th>';
+			$contenu .= '<th>N° de l\'annonce</th>';
+			$contenu .= '<th>Titre</th>';
+			$contenu .= '<th>Description courte</th>';
+			$contenu .= '<th>Description longue</th>';
+			$contenu .= '<th>Prix</th>';
+			$contenu .= '<th>Photo</th>';
+			$contenu .= '<th>Pays</th>';
+			$contenu .= '<th>Ville</th>';
+			$contenu .= '<th>Adresse</th>';
+			$contenu .= '<th>Code postal</th>';
+			$contenu .= '<th>Date de publication</th>';
+			$contenu .= '<th>Membre</th>';
+			$contenu .= '<th>Catégorie</th>';
 			$contenu .= '<th>Action</th>';
 		$contenu .= '</tr>';
 		
@@ -59,7 +58,18 @@ if(isConnectedAndAdmin()) {
 						$contenu .= '<td>' .substr($information, 0, 70) . ' [...]</td>';
 					}elseif($indice == 'photo') {	// on met une balise <img /> pour la photo
 						$contenu .= '<td><img src="../'. $information .'" width="90" height="90"/></td>';
-					} else {
+					}elseif($indice == 'membre_id') {
+						$resultatMembre = executeReq("SELECT * FROM membre WHERE id_membre = $information");
+						$membre = $resultatMembre->fetch(PDO::FETCH_ASSOC);
+						$contenu .= '<td><a href="../mon_compte.php?membre_id='. $membre['id_membre'] .'">' . $membre['pseudo'] . '</a></td>';
+					}elseif($indice == 'categorie_id') {
+						$resultatCateg = executeReq("SELECT * FROM categorie WHERE id_categorie = $information");
+						$categ = $resultatCateg->fetch(PDO::FETCH_ASSOC);
+						$contenu .= '<td>' . $categ['titre'] . '</td>';
+					}elseif($indice == 'date_enregistrement') {
+						$dateFr = new DateTime($information);
+						$contenu .= '<td>' . $dateFr->format('d/m/Y à H:i:s') . '</td>';
+					}else {
 						// pour les autres champs
 						$contenu .= '<td>'. $information .'</td>';
 					}

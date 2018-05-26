@@ -22,7 +22,7 @@ echo $contenu ;
 
 <?php 
 if(isConnectedAndAdmin()) {
-    $resultat1 = executeReq("SELECT DISTINCT(membre.pseudo) as 'membre', ROUND(AVG(note.note),1) as 'note'
+    $resultat1 = executeReq("SELECT DISTINCT(membre.pseudo) as 'membre', ROUND(AVG(note.note),1) as 'note', COUNT(note.note) as 'total'
                              FROM membre
                              LEFT JOIN note ON membre.id_membre = note.membre_id2
                              GROUP BY membre.pseudo
@@ -45,12 +45,11 @@ if(isConnectedAndAdmin()) {
                 $nbNotes = $resultat1bis->fetch(PDO::FETCH_ASSOC);
     
                 if($indice == 'note') {
-                    echo '<td>' . $information . ' / 5 </td>'; 
+                    echo '<td>' . $information . ' / 5 (basé sur '. $bestNote['total'] .' avis)</td>'; 
                 } elseif($indice == 'note' && $indice == NULL) {
                     echo '<td>Aucune note.</td>';
-                } 
-                else {
-                    echo '<td>'. $information .'</td>';
+                } elseif($indice == 'membre') {
+                    echo '<td>'. $bestNote['membre'] .'</td>';
                 }
             }
         echo '</tr>';
@@ -102,7 +101,7 @@ if(isConnectedAndAdmin()) {
     $resultat3 = executeReq("SELECT titre, date_enregistrement
 	                         FROM annonce
 	                         ORDER BY date_enregistrement
-	                         LIMIT 5;");
+	                         LIMIT 5");
 
     echo '<div class="collapse" id="top5annonces">';
 
@@ -116,7 +115,12 @@ if(isConnectedAndAdmin()) {
     while($oldestPost = $resultat3->fetch(PDO::FETCH_ASSOC)) {
     echo '<tr>';
         foreach($oldestPost as $indice => $information) {
+            if($indice == 'date_enregistrement') {
+                $dateFr = new DateTime($information);
+                echo '<td>Publiée le ' . $dateFr->format('d/m/Y à H:i:s') . '</td>';
+            }else{
             echo '<td>'. $information .'</td>';
+            }
         }
     }
         echo '</tr>';    		

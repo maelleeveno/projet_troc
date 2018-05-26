@@ -28,20 +28,20 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 
 // 2- Affichage des commentaires
 if(isConnectedAndAdmin()) {
-	$resultat = executeReq("SELECT commentaire.id_commentaire, commentaire.commentaire, commentaire.date_enregistrement, membre.pseudo, annonce.titre 
+	$resultat = executeReq("SELECT commentaire.id_commentaire, commentaire.commentaire, commentaire.date_enregistrement, membre.pseudo, commentaire.annonce_id 
 						    FROM annonce 
 							LEFT JOIN membre ON annonce.membre_id = membre.id_membre
-							RIGHT JOIN commentaire ON annonce.id_annonce = commentaire.annonce_id"); // sélectionne tous les produits 
+							RIGHT JOIN commentaire ON annonce.id_annonce = commentaire.annonce_id");
 
 	$contenu .= 'Nombre de commentaire :  ' . $resultat->rowCount();
 	$contenu .= '<table class="table">';
 		// Affichage des entêtes du tableau :
 		$contenu .= '<tr>';
-			$contenu .= '<th>id_commentaire</th>';
-			$contenu .= '<th>commentaire</th>';
-			$contenu .= '<th>date_enregistrement</th>';
-			$contenu .= '<th>membre_id</th>';
-			$contenu .= '<th>annonce_id</th>';
+			$contenu .= '<th>N° du commentaire</th>';
+			$contenu .= '<th>Commentaire</th>';
+			$contenu .= '<th>Publié le</th>';
+			$contenu .= '<th>Membre</th>';
+			$contenu .= '<th>Annonce</th>';
 			$contenu .= '<th>Supprimer</th>';
 		$contenu .= '</tr>';
 		
@@ -51,13 +51,16 @@ if(isConnectedAndAdmin()) {
 				// on parcourt les informations du tableau associatif $categorie : 
 				foreach($commentaire as $indice => $information) {
 					if($indice == 'pseudo' && empty($information)) {
-						$contenu .= '<td>Membre supprimé</td>';
-					}elseif($indice == 'titre' && empty($information)) {
-						$contenu .= '<td>Annonce supprimée</td>';
-					}elseif($indice == 'titre') {
-						$resultatAnnonce = executeReq("SELECT * FROM annonce");
+						$contenu .= '<td><i>Membre supprimé</i></td>';
+					}elseif($indice == 'annonce_id' && empty($information)) {
+						$contenu .= '<td><i>Annonce supprimée</i></td>';
+					}elseif($indice == 'annonce_id') {
+						$resultatAnnonce = executeReq("SELECT * FROM annonce WHERE id_annonce = $information");
 						$idAnnonce = $resultatAnnonce->fetch(PDO::FETCH_ASSOC);
-						$contenu .= '<td><a href="../fiche_annonce.php?id_annonce='. $idAnnonce['id_annonce'] .'">' . $information . '</a></td>'; 
+						$contenu .= '<td><a href="../fiche_annonce.php?id_annonce='. $idAnnonce['id_annonce'] .'">' . $idAnnonce['titre'] . '</a></td>'; 
+					}elseif($indice == 'date_enregistrement') {
+						$dateFr = new DateTime($information);
+						$contenu .= '<td>' . $dateFr->format('d/m/Y à H:i:s') . '</td>';
 					}else {
 						$contenu .= '<td>' . $information . '</td>';
 					}

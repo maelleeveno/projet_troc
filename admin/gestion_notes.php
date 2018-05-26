@@ -24,11 +24,9 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 
 // 2- Affichage des notes
 if(isConnectedAndAdmin()) {
-	$resultat = executeReq("SELECT * FROM note"); // sélectionne tous les produits 
 
-	$resultat1 = executeReq("SELECT * FROM membre, note WHERE membre.id_membre = note.membre_id1");
-	$membre1 = $resultat1->fetch(PDO::FETCH_ASSOC);
-
+	// $resultat = executeReq("SELECT * FROM note");
+	$resultat = executeReq("SELECT * FROM note");
 
 	$contenu .= '<h3>Gestion des notes et avis </h3>';
 	
@@ -59,11 +57,16 @@ if(isConnectedAndAdmin()) {
 						}elseif($indice == 'avis') {
 							$contenu .= '<td> '. $information .' </td>';
 						}elseif($indice == 'date_enregistrement') {
-							$contenu .= '<td> '. $information .' </td>';
+							$dateFr = new DateTime($information);
+							$contenu .= '<td>' . $dateFr->format('d/m/Y à H:i:s') . '</td>';
 						}elseif($indice == 'membre_id1') {
-							$contenu .= '<td>' . $information . '</td>';
+							$resultat1 = executeReq("SELECT pseudo FROM membre WHERE id_membre = $information");
+							$acheteur = $resultat1->fetch(PDO::FETCH_ASSOC);
+							$contenu .= '<td>' . $acheteur['pseudo'] . '</td>';
 						}elseif($indice == 'membre_id2') {
-							$contenu .= '<td>' . $information . '</td>';
+							$resultat2 = executeReq("SELECT pseudo FROM membre WHERE id_membre = $information");
+							$vendeur = $resultat2->fetch(PDO::FETCH_ASSOC);
+							$contenu .= '<td>' . $vendeur['pseudo'] . '</td>';
 						}
                     }
 							

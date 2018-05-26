@@ -121,7 +121,10 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 
 	
 	// On récupère la note moyenne du membre : 
-	$resultat2 = executeReq("SELECT ROUND(AVG(note.note), 1) AS 'moyenne', COUNT(note.note) AS 'nbDeNotes' FROM note, membre WHERE note.membre_id2 = membre.id_membre AND membre.id_membre = :membre_id", array('membre_id' => $_GET['membre_id']));
+	$resultat2 = executeReq("SELECT ROUND(AVG(note.note), 1) AS 'moyenne', COUNT(note.note) AS 'nbDeNotes' 
+							 FROM note, membre 
+							 WHERE note.membre_id2 = membre.id_membre AND membre.id_membre = :membre_id", 
+							 array('membre_id' => $_GET['membre_id']));
 	$noteMoyenne = $resultat2->fetch(PDO::FETCH_ASSOC);
 
 	if(isConnected() && $_GET['membre_id'] == $_SESSION['membre']['id_membre']) {
@@ -143,7 +146,11 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 		$contenu .= '<p>Note moyenne : ' . $noteMoyenne['moyenne'] . ' / 5 (sur '. $noteMoyenne['nbDeNotes'] .' notes reçues)</p>';
 		$contenu .= '<h4>Vos avis reçus : </h4><hr />';
 
-		$resultat3 = executeReq("SELECT * FROM note WHERE membre_id2 = :membre_id", array('membre_id' => $_GET['membre_id'])); 
+		$resultat3 = executeReq("SELECT * 
+								 FROM note, membre 
+								 WHERE membre.membre = :membre_id", 
+								 array('membre_id' => $_GET['membre_id'])); 
+
 		while($avis = $resultat3->fetch(PDO::FETCH_ASSOC)) {
 			$resultat = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM note WHERE id_membre = membre_id1)");
 			$membre1 = $resultat->fetch(PDO::FETCH_ASSOC);

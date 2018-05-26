@@ -44,11 +44,13 @@ if(!empty($_POST)) {
 	}
 	
 	if(empty($contenu)){
+		$membreConnecte = $_SESSION['membre'];
 		executeReq("INSERT INTO commentaire (membre_id, annonce_id, commentaire, date_enregistrement) VALUES (:membre, :annonce, :commentaire, NOW())",
-			array(	':membre'		=> $_SESSION['membre']['id_membre'],
-					':annonce'		=> $_GET['id_annonce'],
-					':commentaire' 	=> $_POST['commentaire']
+			array(	':membre'				=> $membreConnecte['id_membre'],
+							':annonce'			=> $_GET['id_annonce'],
+							':commentaire' 	=> $_POST['commentaire']
 			));
+			debug($membreConnecte);
 	}
 	
 }
@@ -56,7 +58,13 @@ if(!empty($_POST)) {
 
 
 // Affichage des suggestions 
-$resultat = executeReq("SELECT * FROM annonce WHERE categorie_id = :categorie_id AND id_annonce <> :id_annonce ORDER BY RAND() LIMIT 4", array(':categorie_id' => $annonce['categorie_id'], ':id_annonce' => $_GET['id_annonce']));
+$resultat = executeReq("SELECT * 
+												FROM annonce 
+												WHERE categorie_id = :categorie_id 
+												AND id_annonce <> :id_annonce 
+												ORDER BY RAND() 
+												LIMIT 4", 
+												array(':categorie_id' => $annonce['categorie_id'], ':id_annonce' => $_GET['id_annonce']));
 
 
 while ($vignette = $resultat->fetch(PDO::FETCH_ASSOC)) {
@@ -158,7 +166,7 @@ echo $contenu;
 	<div class="row">
 	
 		<div class="col-lg-3">
-			<p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Publiée le <?php $annonce['date_enregistrement'] = date("d/m/Y à H:i:s"); echo $annonce['date_enregistrement']; ?></p>
+			<p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Publiée le <?php echo $annonce['date_enregistrement']; ?></p>
 		</div>
 		
 		<div class="col-lg-3">
@@ -195,14 +203,16 @@ echo $contenu;
 			<h3>Commentaires :</h3>
 			<?php 
 
-			$resultatCom = executeReq("SELECT * FROM commentaire WHERE annonce_id = :id_annonce", array(':id_annonce' => $_GET['id_annonce'])); 
-			while($commentaire = $resultatCom->fetch(PDO::FETCH_ASSOC)) {
+			$resultatCom = executeReq("SELECT * 
+																 FROM commentaire, membre 
+																 WHERE commentaire.annonce_id = :id_annonce 
+																 AND commentaire.membre_id = membre.id_membre
+																 ORDER BY commentaire.date_enregistrement DESC", 
+																 array(':id_annonce' => $_GET['id_annonce'])); 
+			while($affichage = $resultatCom->fetch(PDO::FETCH_ASSOC)) {
 
-				$resultat = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM commentaire WHERE id_membre = membre_id)");
-				$membre = $resultat->fetch(PDO::FETCH_ASSOC);
-
-				echo '<p><strong>Avis déposé par '. $membre['pseudo'] . ' le ' . $commentaire['date_enregistrement'] .'</strong></p>';
-				echo '<p>'. $commentaire['commentaire'] .'</p><hr />'; 
+				echo '<p><strong>Avis déposé par '. $affichage['pseudo'] . ' le ' . $affichage['date_enregistrement'] .'</strong></p>';
+				echo '<p>'. $affichage['commentaire'] .'</p><hr />'; 
 			}
 
 			?>
