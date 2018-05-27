@@ -63,10 +63,10 @@
 						if (isConnected()) {
 							echo '<li class="nav-item dropdown">';
 								echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Mon compte <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>';
-								echo '<div class="dropdown-menu">';
-									echo '<a href="' . RACINE_SITE . 'mon_compte.php?membre_id='. $_SESSION['membre']['id_membre'] .'">Mon profil</a><br />';
-									echo '<a href="' . RACINE_SITE . 'mes_annonces.php">Mes annonces</a>';
-								echo '</div>';
+								echo '<ul class="dropdown-menu">';
+									echo '<li><a href="' . RACINE_SITE . 'mon_compte.php?membre_id='. $_SESSION['membre']['id_membre'] .'">Mon profil</a></li>';
+									echo '<li><a href="' . RACINE_SITE . 'mes_annonces.php">Mes annonces</a></li>';
+								echo '</ul>';
 							echo '</li>';
 							echo '<li class="nav-item"><a href="' . RACINE_SITE . 'connexion.php?action=deconnexion">Déconnexion</a></li>';
 						} else {
@@ -78,25 +78,19 @@
 						if (isConnectedAndAdmin()) {
 							echo '<li class="nav-item dropdown">';
 								echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Outils de gestion <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>';
-								echo '<div class="dropdown-menu">';
-									echo '<a href="' . RACINE_SITE . 'admin/gestion_membres.php" class="dropdown-item">Gestion des membres</a><br />';
-									echo '<a href="' . RACINE_SITE . 'admin/gestion_annonces.php" class="dropdown-item">Gestion des annonces</a><br />';
-									echo '<a href="' . RACINE_SITE . 'admin/gestion_categories.php" class="dropdown-item">Gestion des catégories</a><br />';
-									echo '<a href="' . RACINE_SITE . 'admin/gestion_notes.php" class="dropdown-item">Gestion des notes et avis</a><br />';
-									echo '<a href="' . RACINE_SITE . 'admin/gestion_commentaires.php" class="dropdown-item">Gestion des commentaires</a><br />';
-									echo '<a href="' . RACINE_SITE . 'admin/statistiques.php" class="dropdown-item">Statistiques</a><br/>';
-								echo '</div>';
+								echo '<ul class="dropdown-menu">';
+									echo '<li><a href="' . RACINE_SITE . 'admin/gestion_membres.php" class="dropdown-item">Gestion des membres</a></li>';
+									echo '<li><a href="' . RACINE_SITE . 'admin/gestion_annonces.php" class="dropdown-item">Gestion des annonces</a></li>';
+									echo '<li><a href="' . RACINE_SITE . 'admin/gestion_categories.php" class="dropdown-item">Gestion des catégories</a></li>';
+									echo '<li><a href="' . RACINE_SITE . 'admin/gestion_notes.php" class="dropdown-item">Gestion des notes et avis</a></li>';
+									echo '<li><a href="' . RACINE_SITE . 'admin/gestion_commentaires.php" class="dropdown-item">Gestion des commentaires</a></li>';
+									echo '<li><a href="' . RACINE_SITE . 'admin/statistiques.php" class="dropdown-item">Statistiques</a></li>';
+								echo '</ul>';
 							echo '</li>';
 						} 
 						
 						?>
-						
-						<form class="navbar-form navbar-right inline-form">
-							<div class="form-group">
-								<input type="search" class="input-sm form-control" placeholder="Recherche">
-								<button type="submit" class="btn btn-sm"><span class="glyphicon glyphicon-search"></span></button>
-							</div>
-						</form>
+
 
 					</ul>
 				</div>

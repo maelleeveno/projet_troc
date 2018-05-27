@@ -50,7 +50,7 @@ if(!empty($_POST)) {
 							':annonce'			=> $_GET['id_annonce'],
 							':commentaire' 	=> $_POST['commentaire']
 			));
-			debug($membreConnecte);
+			// debug($membreConnecte);
 	}
 	
 }
@@ -59,12 +59,12 @@ if(!empty($_POST)) {
 
 // Affichage des suggestions 
 $resultat = executeReq("SELECT * 
-												FROM annonce 
-												WHERE categorie_id = :categorie_id 
-												AND id_annonce <> :id_annonce 
-												ORDER BY RAND() 
-												LIMIT 4", 
-												array(':categorie_id' => $annonce['categorie_id'], ':id_annonce' => $_GET['id_annonce']));
+						FROM annonce 
+						WHERE categorie_id = :categorie_id 
+						AND id_annonce <> :id_annonce 
+						ORDER BY RAND() 
+						LIMIT 4", 
+						array(':categorie_id' => $annonce['categorie_id'], ':id_annonce' => $_GET['id_annonce']));
 
 
 while ($vignette = $resultat->fetch(PDO::FETCH_ASSOC)) {
@@ -90,12 +90,13 @@ echo $contenu;
 		<div class="col-lg-8">
 			<h1 class="page-header"><?php echo $annonce['titre']; ?></h1>
 		</div>
+		
 		<div class="col-lg-2">
 			<input class="btn" type="button" value="Contacter <?php echo $membre_actuel['pseudo']; ?>" data-toggle="modal" data-target="#ModalContact">
 		</div>
 
 		<div class="col-lg-2">
-			<input class="btn" type="button" value="Une question à propos de l'annonce ?" data-toggle="modal" data-target="#ModalCommentaire">
+			<input class="btn" type="button" value="Laisser un commentaire" data-toggle="modal" data-target="#ModalCommentaire">
 		</div>
 	
 		<div class="col-md-6">
@@ -103,11 +104,21 @@ echo $contenu;
 		</div>
 		
 		<div class="col-md-6">
-			<h3>Description de l'annonce</h3>			
+			<h3>Détails de l'annonce</h3><hr />			
 			<p><?php echo $annonce['description_courte']; ?></p><br />
 
-			<a data-toggle="collapse" href="#infos" aria-expanded="false" aria-controls="infos"><h5><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Plus de renseignements</h5></a>
-			<div class="collapse" id="infos"><?php echo $annonce['description_longue']; ?></div>
+			<a data-toggle="collapse" href="#infos" aria-expanded="false" aria-controls="infos"><h5><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Plus de renseignements</h5></a><br />
+			<div class="collapse" id="infos"><?php echo $annonce['description_longue']; ?></div><br />
+
+			<p>Mots-clés :
+			<?php
+				$resultatCat = executeReq("SELECT * FROM categorie, annonce WHERE categorie.id_categorie = annonce.categorie_id AND annonce.id_annonce = :id_annonce", array(':id_annonce' => $_GET['id_annonce']));
+				$motscles = $resultatCat->fetch(PDO::FETCH_ASSOC);
+				echo ''. $motscles['motscles'] .'</p><br />'; 
+
+			?>
+
+			<p><a href="#commentaires">Voir les commentaires</a></p>
 		</div>
 		
 	</div><!-- .row -->
@@ -122,7 +133,7 @@ echo $contenu;
 			<h4 class="modal-title">Votre contact</h4>
 		  </div>
 		  <div class="modal-body">
-			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> : <?php echo $membre_actuel['pseudo']; ?><br>
+			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> : <?php echo '<a href="mon_compte.php?membre_id='. $membre_actuel['id_membre'] .'">' . $membre_actuel['pseudo'] . '</a>'; ?><br>
 			<span class="glyphicon glyphicon-phone-alt"></span> : <?php echo $membre_actuel['telephone']; ?><br>
 			<span class="glyphicon glyphicon-envelope"></span> : <a href="mailto:<?php echo $membre_actuel['email']; ?>"><?php echo $membre_actuel['email']; ?></a></p>
 		  </div>
@@ -146,7 +157,7 @@ echo $contenu;
 		  <div class="modal-body">
 			
 			<form method="post" action="">
-				<textarea name="commentaire" id="commentaire" rows="7" cols="60"></textarea><br /><br />
+				<textarea name="commentaire" id="commentaire" class="form-control" rows="7" cols="60"></textarea><br /><br />
 				<input type="submit" value="Publier" name="validation" class="btn" />
 			</form>
 
@@ -166,7 +177,7 @@ echo $contenu;
 	<div class="row">
 	
 		<div class="col-lg-3">
-			<p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Publiée le <?php echo $annonce['date_enregistrement']; ?></p>
+			<p><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Publiée le <?php $dateFr = new DateTime($annonce['date_enregistrement']); echo $dateFr->format('d/m/Y à H:i:s'); ?></p>
 		</div>
 		
 		<div class="col-lg-3">
@@ -196,23 +207,24 @@ echo $contenu;
 			<h3 class="page-header">Produits similaires :</h3>
 		</div>
 		<?php echo $suggestion; ?>
-	</div>
+	</div><br />
 
 	<div class="row">
 		<div class="col-lg-12">
-			<h3>Commentaires :</h3>
+			<h3 id="commentaires">Commentaires :</h3><hr />
 			<?php 
 
 			$resultatCom = executeReq("SELECT * 
-																 FROM commentaire, membre 
-																 WHERE commentaire.annonce_id = :id_annonce 
-																 AND commentaire.membre_id = membre.id_membre
-																 ORDER BY commentaire.date_enregistrement DESC", 
-																 array(':id_annonce' => $_GET['id_annonce'])); 
+									   FROM commentaire, membre 
+									   WHERE commentaire.annonce_id = :id_annonce 
+									   AND commentaire.membre_id = membre.id_membre
+									   ORDER BY commentaire.date_enregistrement DESC", 
+									   array(':id_annonce' => $_GET['id_annonce'])); 
 			while($affichage = $resultatCom->fetch(PDO::FETCH_ASSOC)) {
-
-				echo '<p><strong>Avis déposé par '. $affichage['pseudo'] . ' le ' . $affichage['date_enregistrement'] .'</strong></p>';
-				echo '<p>'. $affichage['commentaire'] .'</p><hr />'; 
+				echo '<div class="thumbnail">';
+				echo '<p><strong>Avis déposé par <a href="mon_compte.php?membre_id='. $affichage['id_membre'] .'">'. $affichage['pseudo'] . '</a> le ' . $dateFr->format('d/m/Y à H:i:s') .'</strong></p>';
+				echo '<p>'. $affichage['commentaire'] .'</p>'; 
+				echo '</div>';
 			}
 
 			?>

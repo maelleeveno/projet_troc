@@ -32,5 +32,5 @@ $(document).ready(function(){
       $('.star').attr({src:srcOut});
       $('#note').attr({value:'0'});
     },function(){});
-  });
-  
+});
+

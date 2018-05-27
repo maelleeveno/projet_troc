@@ -15,8 +15,8 @@ if (isset($_GET['membre_id'])) {
 		
 	if ($resultat->rowCount() == 0) {
 		// s'il n'y a pas de ligne dans le jeu de résultat, c'est que le membre n'est pas ou plus en BDD :
-        header('location:index.php');
         $contenu .= '<div class="bg-danger">Le membre recherché n\'existe plus.</div>';	
+        header('location:index.php');
 		exit();
 	}
 	
@@ -37,13 +37,15 @@ if (isset($_GET['membre_id'])) {
 
 // 2- Suppresion du membre : 
 if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_SESSION['membre']['id_membre'])) {
+
 	$resultat = executeReq("DELETE FROM membre WHERE id_membre = :id_membre", 
-							   array(':id_annonce' => $_SESSION['membre']['id_membre']));
+							   array(':id_membre' => $_SESSION['membre']['id_membre']));
 							   
 	if($resultat->rowCount() > 0) {
 		$contenu .= '<div class="bg-success">Votre profil a bien été supprimé !</div>';
 	}
-	
+
+	unset($_SESSION['membre']);
 	$_GET['action'] = 'deconnexion';
 	header('location:index.php');	
 	exit();
@@ -128,10 +130,10 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 	$noteMoyenne = $resultat2->fetch(PDO::FETCH_ASSOC);
 
 	if(isConnected() && $_GET['membre_id'] == $_SESSION['membre']['id_membre']) {
-		$contenu .= '<p class="bg-success" style="text-align: center;">Bonjour <strong>' . $_SESSION['membre']['pseudo'] . '</strong> ! </p>';
+		$contenu .= '<p class="bg-success" style="text-align: center;">Bonjour <strong>' . $_SESSION['membre']['pseudo'] . '</strong>, bienvenue sur votre espace membre </p>';
 		$contenu .= '<div><h3>Voici vos informations de profil';
 		$contenu .= '<a href="?action=modification&membre_id='. $membre['id_membre'] .'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>';
-		$contenu .= '<a href="?action=suppression&membre_id='. $membre['id_membre'] .'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+		$contenu .= '<a href="?action=suppression&membre_id='. $membre['id_membre'] .'" onclick="return(confirm(\'Êtes-vous certain de vouloir supprimer votre profil ?\'));"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
 		$contenu .= '</h3><hr />';
 
 		$contenu .= '<p>Pseudo : ' . $membre['pseudo'] . '</p>';
@@ -144,22 +146,26 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 
 
 		$contenu .= '<p>Note moyenne : ' . $noteMoyenne['moyenne'] . ' / 5 (sur '. $noteMoyenne['nbDeNotes'] .' notes reçues)</p>';
-		$contenu .= '<h4>Vos avis reçus : </h4><hr />';
+		$contenu .= '<h4><a data-toggle="collapse" href="#avis" aria-expanded="false" aria-controls="avis"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Vos avis reçus : </a></h4><hr />';
+
+		$contenu .= '<div class="collapse" id="avis">';
 
 		$resultat3 = executeReq("SELECT * 
 								 FROM note, membre 
-								 WHERE membre.membre = :membre_id", 
+								 WHERE note.membre_id2 = :membre_id
+								 AND note.membre_id1 = membre.id_membre", 
 								 array('membre_id' => $_GET['membre_id'])); 
 
 		while($avis = $resultat3->fetch(PDO::FETCH_ASSOC)) {
-			$resultat = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM note WHERE id_membre = membre_id1)");
-			$membre1 = $resultat->fetch(PDO::FETCH_ASSOC);
+			// $resultat = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM note WHERE id_membre = membre_id1)");
+			// $membre1 = $resultat->fetch(PDO::FETCH_ASSOC);
 	
-			$contenu .= '<p><strong>Avis déposé par '. $membre1['pseudo'] . ' le ' . $avis['date_enregistrement'] .'</strong></p>';
+			$contenu .= '<p><strong>Avis déposé par <a href="mon_compte.php?membre_id='. $avis['id_membre'] .'">'. $avis['pseudo'] . '</a> le ' . $avis['date_enregistrement'] .'</strong></p>';
 			$contenu .= '<p>Note : '. $avis['note'] .' / 5</p>'; 
 			$contenu .= '<p>'. $avis['avis'] .'</p><hr />'; 
 		}
 
+		$contenu .= '</div>';
 
 		
 	} else{
@@ -172,19 +178,17 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 
 		$contenu .= '<button class="btn"><a href="avis.php?membre_id='. $membre['id_membre'] .'">Laisser un avis à '. $membre['pseudo'] .' </a></button><br /><br />';
 
-		$contenu .= '<h4>Les avis reçus par '. $membre['pseudo'] .' : </h4><hr />';
+		$contenu .= '<h4><a data-toggle="collapse" href="#avis" aria-expanded="false" aria-controls="avis"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Les avis reçus par '. $membre['pseudo'] .' : </a></h4><hr />';
 
-		$resultat3 = executeReq("SELECT * FROM note WHERE membre_id2 = :membre_id", array('membre_id' => $_GET['membre_id'])); 
-		while($avis = $resultat3->fetch(PDO::FETCH_ASSOC)) {
-			$resultat = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM note WHERE id_membre = membre_id1)");
-			$membre1 = $resultat->fetch(PDO::FETCH_ASSOC);
-	
-			$contenu .= '<p><strong>Avis déposé par '. $membre1['pseudo'] . ' le ' . $avis['date_enregistrement'] .'</strong></p>';
+		$contenu .= '<div class="collapse" id="avis">';
+		$resultat3 = executeReq("SELECT * FROM note, membre WHERE note.membre_id2 = :membre_id AND note.membre_id1 = membre.id_membre", array('membre_id' => $_GET['membre_id'])); 
+		while($avis = $resultat3->fetch(PDO::FETCH_ASSOC)) {	
+			$dateFr = new DateTime($avis['date_enregistrement']);		
+			$contenu .= '<p><strong>Avis déposé par <a href="mon_compte.php?membre_id='. $avis['id_membre'] .'">'. $avis['pseudo'] . '</a> le ' . $dateFr->format('d/m/Y à H:i:s') .'</strong></p>';
 			$contenu .= '<p>Note : '. $avis['note'] .' / 5</p>'; 
-			$contenu .= '<p>'. $avis['avis'] .'</p><hr />'; 
-			
+			$contenu .= '<p>'. $avis['avis'] .'</p><hr />'; 	
 		}
-
+		$contenu .= '</div>';
 	} 
 
 

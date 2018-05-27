@@ -61,16 +61,20 @@ require_once('inc/haut.inc.php');
 echo $contenu;
 ?>
 
-<h3>Connexion</h3>
+<h2 class="text-center">Connexion</h2>
 
 <form method="post" action="" class="col-lg-offset-4 col-lg-4">
-	<label for="pseudo">Pseudo</label>
-	<input type="text" name="pseudo" id="pseudo" class="form-control" /><br />
+	<div class="input-group">
+		<span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+		<input type="text" name="pseudo" id="pseudo" class="form-control" placeholder="Votre pseudo" aria-describedby="basic-addon1">
+	</div><br />
+
+	<div class="input-group">
+		<span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+		<input type="password" name="mdp" id="mdp" class="form-control" placeholder="Votre mot de passe" aria-describedby="basic-addon2">
+	</div><br />
 	
-	<label for="mdp">Mot de passe</label>
-	<input type="password" name="mdp" id="mdp" class="form-control"  /><br />
-	
-	<input type="submit" value="Se connecter" class="btn" />
+	<input type="submit" value="Se connecter" class="btn align-center" />
 </form>
 
 

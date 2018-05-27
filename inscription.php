@@ -70,26 +70,39 @@ echo $contenu; 	// pour afficher des messages
 // debug($_POST);
 ?>
 
-<h2>Complétez le formulaire pour vous inscrire</h2>
+<h2 class="text-center">Inscription</h2>
 
 <form method="post" action="" class="col-lg-offset-4 col-lg-4">
-	<label for="pseudo">Pseudo</label>
-	<input type="text" name="pseudo" id="pseudo" class="form-control" value="<?php echo $_POST['pseudo'] ?? ''; ?>" /><br />
 	
-	<label for="mdp">Mot de passe</label>
-	<input type="password" name="mdp" id="mdp" class="form-control" value="<?php echo $_POST['mdp'] ?? ''; ?>" /><br />
+	<div class="input-group">
+		<span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+		<input type="text" name="pseudo" id="pseudo" class="form-control" placeholder="Votre pseudo" aria-describedby="basic-addon1" value="<?php echo $_POST['pseudo'] ?? ''; ?>">
+	</div><br />
+
+	<div class="input-group">
+		<span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+		<input type="password" name="mdp" id="mdp" class="form-control" placeholder="Votre mot de passe" aria-describedby="basic-addon2" value="<?php echo $_POST['mdp'] ?? ''; ?>">
+	</div><br />
 	
-	<label for="nom">Nom</label>
-	<input type="text" name="nom" id="nom" class="form-control" value="<?php echo $_POST['nom'] ?? ''; ?>" /><br />
+	<div class="input-group">
+		<span class="input-group-addon" id="basic-addon3"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+		<input type="text" name="nom" id="nom" class="form-control" placeholder="Votre nom" aria-describedby="basic-addon3" value="<?php echo $_POST['nom'] ?? ''; ?>">
+	</div><br />
+
+	<div class="input-group">
+		<span class="input-group-addon" id="basic-addon4"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+		<input type="text" name="prenom" id="prenom" class="form-control" placeholder="Votre prénom" aria-describedby="basic-addon4" value="<?php echo $_POST['prenom'] ?? ''; ?>">
+	</div><br />
 	
-	<label for="prenom">Prénom</label>
-	<input type="text" name="prenom" id="prenom" class="form-control" value="<?php echo $_POST['prenom'] ?? ''; ?>" /><br />
-	
-	<label for="telephone">Téléphone</label>
-	<input type="text" name="telephone" id="telephone" class="form-control" value="<?php echo $_POST['telephone'] ?? ''; ?>" /><br />
-	
-	<label for="email">Email</label>
-	<input type="text" name="email" id="email" class="form-control" value="<?php echo $_POST['email'] ?? ''; ?>" /><br />
+	<div class="input-group">
+		<span class="input-group-addon" id="basic-addon5"><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span></span>
+		<input type="text" name="telephone" id="telephone" class="form-control" placeholder="Votre téléphone" aria-describedby="basic-addon5" value="<?php echo $_POST['telephone'] ?? ''; ?>">
+	</div><br />
+
+	<div class="input-group">
+		<span class="input-group-addon" id="basic-addon6"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></span>
+		<input type="text" name="email" id="email" class="form-control" placeholder="Votre email" aria-describedby="basic-addon6" value="<?php echo $_POST['email'] ?? ''; ?>">
+	</div><br />
 	
 	<label>Civilité</label>
 	<input type="radio" name="civilite" id="homme" value="m" checked /><label for="homme">Homme</label>

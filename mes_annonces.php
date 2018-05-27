@@ -82,7 +82,7 @@ if(!empty($_POST)) {	// si le formulaire est soumis
 		
 	}
 	
-	debug($_POST);
+	// debug($_POST);
 	
 	// Enregistrement de l'annonce : 
 	executeReq("REPLACE INTO annonce
@@ -112,60 +112,62 @@ if(!empty($_POST)) {	// si le formulaire est soumis
 	
 	
 // 6- Affichage des annonces dans une table HTML : 
-if(isset($_GET['action']) && $_GET['action'] == 'affichage') {
-	// si on a demandé l'affichage de la table HTML 
+
+$resultat = executeReq("SELECT id_annonce, titre, description_courte, description_longue, prix, photo, pays, ville, adresse, cp, date_enregistrement, categorie_id FROM annonce WHERE membre_id = :membre_id", 
+			array (':membre_id' => $_SESSION['membre']['id_membre'])); // sélectionne tous les annonces 
+
+$contenu .= 'Mes annonces publiées :  ' . $resultat->rowCount();
+$contenu .= '<table class="table">';
+	// Affichage des entêtes du tableau :
+	$contenu .= '<tr>';
+		$contenu .= '<th>N° de l\'annonce</th>';
+		$contenu .= '<th>Titre</th>';
+		$contenu .= '<th>Description courte</th>';
+		$contenu .= '<th>Détails</th>';
+		$contenu .= '<th>Prix</th>';
+		$contenu .= '<th>Photo</th>';
+		$contenu .= '<th>Pays</th>';
+		$contenu .= '<th>Ville</th>';
+		$contenu .= '<th>Adresse</th>';
+		$contenu .= '<th>Code postal</th>';
+		$contenu .= '<th>Date de publication</th>';
+		$contenu .= '<th>Catégorie</th>';
+		$contenu .= '<th>Gestion</th>';
+	$contenu .= '</tr>';
 	
-	$resultat = executeReq("SELECT * FROM annonce WHERE membre_id = :membre_id", 
-				array (':membre_id' => $_SESSION['membre']['id_membre'])); // sélectionne tous les annonces 
-	
-	$contenu .= 'Mes annonces publiées :  ' . $resultat->rowCount();
-	$contenu .= '<table class="table">';
-		// Affichage des entêtes du tableau :
+	// affichage des lignes du tableau : 
+	while($annonce = $resultat->fetch(PDO::FETCH_ASSOC)) {
 		$contenu .= '<tr>';
-			$contenu .= '<th>id_annonce</th>';
-			$contenu .= '<th>titre</th>';
-			$contenu .= '<th>description_courte</th>';
-			$contenu .= '<th>description_longue</th>';
-			$contenu .= '<th>prix</th>';
-			$contenu .= '<th>photo</th>';
-			$contenu .= '<th>pays</th>';
-			$contenu .= '<th>ville</th>';
-			$contenu .= '<th>adresse</th>';
-			$contenu .= '<th>cp</th>';
-			$contenu .= '<th>date_enregistrement</th>';
-			$contenu .= '<th>membre_id</th>';
-			$contenu .= '<th>categorie</th>';
-			$contenu .= '<th>Modifier</th>';
-		$contenu .= '</tr>';
-		
-		// affichage des lignes du tableau : 
-		while($annonce = $resultat->fetch(PDO::FETCH_ASSOC)) {
-			$contenu .= '<tr>';
-				// on parcourt les informations du tableau associatif $annonce : 
-				foreach($annonce as $indice => $information) {
-
-					if($indice == 'prix') {
-						$contenu .= '<td>' . $information . ' €</td>';
-					} elseif($indice == 'photo') {	// on met une balise <img /> pour la photo
-						$contenu .= '<td><img src="'. $information .'" width="90" height="90"/></td>';
-					} else {
-						// pour les autres champs
-						$contenu .= '<td>'. $information .'</td>';
-					}
-
+			foreach($annonce as $indice => $information) {
+				if($indice =='description_longue' && strlen($information) >= 70) {
+					$contenu .= '<td>' .substr($information, 0, 70) . ' <a href="fiche_annonce.php?id_annonce='. $annonce['id_annonce'] .' ">[...]</a></td>';
+				}elseif($indice == 'prix') {
+					$contenu .= '<td>' . $information . ' €</td>';
+				}elseif($indice == 'categorie_id') {
+					$resultatCateg = executeReq("SELECT * FROM categorie WHERE id_categorie = $information");
+					$categ = $resultatCateg->fetch(PDO::FETCH_ASSOC);
+					$contenu .= '<td>' . $categ['titre'] . '</td>';
+				}elseif($indice == 'date_enregistrement') {
+					$dateFr = new DateTime($information);
+					$contenu .= '<td>' . $dateFr->format('d/m/Y à H:i:s') . '</td>';
+				}elseif($indice == 'photo') {	
+					$contenu .= '<td><img src="'. $information .'" width="90" height="90"/></td>';
+				} else {
+					$contenu .= '<td>'. $information .'</td>';
 				}
+			}
+					
+		$contenu .= '<td>
+						<a href="fiche_annonce.php?id_annonce='. $annonce['id_annonce'] .'"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
 						
-			$contenu .= '<td>
-							<a href="fiche_annonce.php?id_annonce='. $annonce['id_annonce'] .'"> <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-							
-							<a href="?action=modification&id_annonce='. $annonce['id_annonce'] .'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-							
-							<a href="?action=suppression&id_annonce='. $annonce['id_annonce'] .'"  onclick="return(confirm(\'Êtes-vous certain de vouloir supprimer cette annonce ?\'));" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-						</td>';
-			$contenu .= '</tr>';
-		}			
-	$contenu .= '</table>';
-} // fin du if(isset($_GET['action']) && $_GET['action'] == 'affichage')
+						<a href="?action=modification&id_annonce='. $annonce['id_annonce'] .'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+						
+						<a href="?action=suppression&id_annonce='. $annonce['id_annonce'] .'"  onclick="return(confirm(\'Êtes-vous certain de vouloir supprimer cette annonce ?\'));" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+					</td>';
+		$contenu .= '</tr>';
+	}			
+$contenu .= '</table>';
+
 	
 
 
@@ -174,10 +176,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'affichage') {
 require_once('inc/haut.inc.php');
 
 // 2- Onglets 'ajout' et 'affichage des produits' :
-echo 	'<ul class="nav nav-tabs">
-			<li><a href="?action=affichage">Afficher mes annonces</a></li>
-			<li><a href="?action=ajout">Ajouter une annonce</a></li>
-		</ul>';
+echo 	'<div class="row"><h4 class="pull-right"><a href="?action=ajout"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ajouter une annonce</a></h4></div><br />';
 
 echo $contenu; // pour afficher les messages
 
@@ -221,7 +220,12 @@ if (isset($_GET['action']) && ($_GET['action'] == 'ajout' || $_GET['action'] == 
 		
 			// affichage des autres catégories : 
 			while ($cat = $resultat->fetch(PDO::FETCH_ASSOC)) {
-				echo '<option value="'. $cat['id_categorie'] .'">' . $cat['titre'] . '</option>'; 
+				if($cat['id_categorie'] == $annonce_actuelle['categorie_id']) {
+					$selected = 'selected';
+				} else {
+					$selected = '';
+				}
+				echo '<option value="'. $cat['id_categorie'] .'"'. $selected .'>' . $cat['titre'] . '</option>'; 
 			}
 		?>
 		</select><br />

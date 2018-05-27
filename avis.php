@@ -35,7 +35,7 @@ if(!empty($_POST)) {
 
 }
 
-debug($_POST);
+// debug($_POST);
 
 $resultat = executeReq("SELECT * FROM membre WHERE id_membre = :id_membre",
 array(':id_membre' => $_GET['membre_id']));

@@ -48,8 +48,8 @@ if(isConnectedAndAdmin()) {
 			$contenu .= '<tr>';
                     foreach($note as $indice => $information) {
 
-                        if(empty($information)) {
-							$contenu .= '<td>Membre supprimé</td>';
+                        if( ($indice == 'membre_id1' || $indice == 'membre_id2') && empty($information)) {
+							$contenu .= '<td><i>Membre supprimé</i></td>';
 						}elseif($indice == 'id_note') {
 							$contenu .= '<td> '. $information .' </td>';
 						}elseif($indice == 'note') {
@@ -60,13 +60,13 @@ if(isConnectedAndAdmin()) {
 							$dateFr = new DateTime($information);
 							$contenu .= '<td>' . $dateFr->format('d/m/Y à H:i:s') . '</td>';
 						}elseif($indice == 'membre_id1') {
-							$resultat1 = executeReq("SELECT pseudo FROM membre WHERE id_membre = $information");
+							$resultat1 = executeReq("SELECT * FROM membre WHERE id_membre = $information");
 							$acheteur = $resultat1->fetch(PDO::FETCH_ASSOC);
-							$contenu .= '<td>' . $acheteur['pseudo'] . '</td>';
+							$contenu .= '<td><a href="../mon_compte.php?membre_id='. $acheteur['id_membre'] .'">' . $acheteur['pseudo'] . '</a></td>';
 						}elseif($indice == 'membre_id2') {
-							$resultat2 = executeReq("SELECT pseudo FROM membre WHERE id_membre = $information");
+							$resultat2 = executeReq("SELECT * FROM membre WHERE id_membre = $information");
 							$vendeur = $resultat2->fetch(PDO::FETCH_ASSOC);
-							$contenu .= '<td>' . $vendeur['pseudo'] . '</td>';
+							$contenu .= '<td><a href="../mon_compte.php?membre_id='. $vendeur['id_membre'] .'">' . $vendeur['pseudo'] . '</a></td>';
 						}
                     }
 							

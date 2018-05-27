@@ -35,21 +35,41 @@ position: absolute;
 
 
 /* Affichage des annonces --> index.php */
+body span.btn-affichage {
+	height: 33px;
+	width: 44px;
+	border-radius: 4px;
+}
+
 form.form-tri {
 	text-align: right;
 	margin-bottom: 50px;
 	display: flex;
 } 
 
-body > div:nth-child(2) > div > div.col-md-9 > div > div.row > form > input {
+form.form-tri .btn-tri {
 	margin-left: 10px;
 	height: 34px;
 }
 
-body div.thumbnail {
-	height: 300px;
+body div.image {
+	width: 35%;
+}
+
+body div.infos {
+	width: 65%;
+	float: right;
 }
 
 body img.vignette {
 	height: 150px;
+}
+
+body div.cadreAnnonce {
+	height: 300px;
+}
+
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+
 }
