@@ -6,16 +6,16 @@ require_once('inc/init.inc.php');
 
 // 1- Vérification que le membre est connecté : 
     if(!isConnected()) {
-        header('location:connexion.php');
+        header('location:index.php');
         exit();	// on quitte le script.
     }
 
 if(!empty($_POST)) {
     if( !isset($_POST['note']) || !preg_match('/^[1-5]{1}$/', $_POST['note']) ) {
-        $contenu .= '<div class="bg-danger">Veuillez laisser une note.</div>';
+        $contenu .= '<div class="bg-danger text-center">Veuillez laisser une note.</div>';
     }
-    if(!isset($_POST['avis']) || strlen($_POST['avis']) < 2 || strlen($_POST['avis']) > 150 ) {
-        $contenu .= '<div class="bg-danger">Veuillez laisser un avis (entre 2 et 150 caractères).</div>';
+    if(!isset($_POST['avis']) || strlen($_POST['avis']) < 2 || strlen($_POST['avis']) > 350 ) {
+        $contenu .= '<div class="bg-danger text-center">Veuillez laisser un avis (entre 2 et 350 caractères).</div>';
     }
 
     if (empty($contenu)) {
@@ -30,7 +30,7 @@ if(!empty($_POST)) {
                               ':membre_id1' => $_SESSION['membre']['id_membre'],
                               ':membre_id2' => $membre2['id_membre']
                         ));
-                        $contenu .= '<div class="bg-success">Votre avis a bien été enregistré. Retournez sur le <a href="mon_compte.php?membre_id='. $_GET['membre_id'] .'">profil du membre.</a></div>';
+                        $contenu .= '<div class="bg-success text-center">Votre avis a bien été enregistré. Retournez sur le <a href="mon_compte.php?membre_id='. $_GET['membre_id'] .'">profil du membre.</a></div>';
 	}
 
 }

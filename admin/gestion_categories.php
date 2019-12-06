@@ -7,7 +7,7 @@ require_once('../inc/init.inc.php');
 // 1- Vérification que le membre est admin et est connecté : 
 if(!isConnectedAndAdmin()) {
 	// Si membre non connecté ou non admin, on le redirige vers la page de connexion :
-	header('location:../connexion.php');	// on demande la page de connexion
+	header('location:../index.php');	// on demande la page de connexion
 	exit();	// on quitte le script.
 } 
 
@@ -19,7 +19,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 							   array(':id_categorie' => $_GET['id_categorie']));
 							   
 	if($resultat->rowCount() > 0) {
-		$contenu .= '<div class="bg-success">La catégorie a bien été supprimée !</div>';
+		$contenu .= '<div class="bg-success text-center">La catégorie a bien été supprimée !</div>';
 	}
 	
 	$_GET['action'] = 'affichage';	// permet de lancer l'affichage des catégories (cf. chapitre 6 ci-dessous).
@@ -32,23 +32,22 @@ if(!empty($_POST)) {	// si le formulaire est soumis
         // traitement du formulaire : 
 		// Titre : 
 		if(!isset($_POST['titre']) || strlen($_POST['titre']) < 4 || strlen($_POST['titre']) > 15) {
-			$contenu .= '<div class="bg-danger">Le titre doit être compris entre 4 et 15 caractères. Veuillez saisir un titre correct.</div>';	
+			$contenu .= '<div class="bg-danger text-center">Le titre doit être compris entre 4 et 15 caractères. Veuillez saisir un titre correct.</div>';	
 		}
 		
 		// mots-clés :
 		if(!isset($_POST['motscles']) || strlen($_POST['motscles']) < 5 || strlen($_POST['motscles']) > 300) {
-			$contenu .= '<div class="bg-danger">La description doit comprendre entre 5 et 300 caractères. Veuillez recommencer votre saisie.</div>';
+			$contenu .= '<div class="bg-danger text-center">La description doit comprendre entre 5 et 300 caractères. Veuillez recommencer votre saisie.</div>';
 		}
 	
 	// Enregistrement de la catégorie : 
-	executeReq("REPLACE INTO categorie
-					VALUE(id_categorie, :titre, :motscles)", 
-					
-					array( ':titre'			=> $_POST['titre'],
+	executeReq("UPDATE categorie SET id_categorie = :id_categorie, titre = :titre, motscles = :motscles WHERE id_categorie = :id_categorie", 
+					array( ':id_categorie'	=> $_POST['id_categorie'],
+						   ':titre'			=> $_POST['titre'],
 						   ':motscles'	    => $_POST['motscles']
 					));
 	
-	$contenu .= '<div class="bg-success">La catégorie a bien été enregistrée.</div>';
+	$contenu .= '<div class="bg-success text-center">La catégorie a bien été enregistrée.</div>';
 	
 	$_GET['action'] = 'affichage';	// Pour déclencher l'affichage de la table HTML avec tous les catégories (cf. étape 6 ci-dessous)
 	
@@ -60,13 +59,13 @@ if(isConnectedAndAdmin()) {
 	$resultat = executeReq("SELECT * FROM categorie"); // sélectionne tous les produits 
 
 	$contenu .= 'Nombre de catégories :  ' . $resultat->rowCount();
-	$contenu .= '<table class="table">';
+	$contenu .= '<table class="table table-striped text-center">';
 		// Affichage des entêtes du tableau :
 		$contenu .= '<tr>';
-			$contenu .= '<th>id_categorie</th>';
-			$contenu .= '<th>titre</th>';
-			$contenu .= '<th>motscles</th>';
-			$contenu .= '<th>Action</th>';
+			$contenu .= '<th scope="col">N° de la catégorie</th>';
+			$contenu .= '<th scope="col">Nom de la catégorie</th>';
+			$contenu .= '<th scope="col">Mots-clés</th>';
+			$contenu .= '<th scope="col">Gestion</th>';
 		$contenu .= '</tr>';
 		
 		// affichage des lignes du tableau : 
@@ -93,9 +92,9 @@ if(isConnectedAndAdmin()) {
 // ------------- AFFICHAGE ------------
 
 require_once('../inc/haut.inc.php');
-    
+
+echo '<h4 class="pull-right"><a href="?action=ajout">Ajouter une catégorie <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></a></h4>';   
 echo '<h3>Gestion des catégories </h3>';
-echo '<h4><a href="?action=ajout">Ajouter une catégorie <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></a></h4>';
 
 echo $contenu; // pour afficher les messages
 
@@ -119,13 +118,13 @@ if (isset($_GET['action']) && ($_GET['action'] == 'ajout' || $_GET['action'] == 
 	
 	<form method="post" action="" class="col-lg-offset-4 col-lg-4">	
 		
-		<input type="hidden" id="id_categorie" name="id_categorie" value="" /> <!-- Nécessaire pour la phase de modification d'une catégorie. Champ caché pour ne pas pouvoir être modifiable -->	
+		<input type="hidden" id="id_categorie" name="id_categorie" value="<?php echo $categorie_actuelle['id_categorie']; ?>" /> <!-- Nécessaire pour la phase de modification d'une catégorie. Champ caché pour ne pas pouvoir être modifiable -->	
 		
 		<label for="titre">Titre</label><br />
-		<input type="texte" id="titre" name="titre" class="form-control" value="" /><br />		
+		<input type="texte" id="titre" name="titre" class="form-control" value="<?php echo $categorie_actuelle['titre']; ?>" /><br />		
 
 		<label for="motscles">Mots-clés</label><br />
-		<textarea id="motscles" name="motscles" class="form-control" value=""></textarea><br />
+		<textarea id="motscles" name="motscles" class="form-control"><?php echo $categorie_actuelle['motscles']; ?></textarea><br />
 			
 		<input type="submit" value="Enregistrer" class="btn" />
 		

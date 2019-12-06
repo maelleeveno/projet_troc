@@ -39,14 +39,14 @@ $contenu_gauche .= '<form method="post" action="">';
 		foreach($prixMax as $indice => $information) {
 			$contenu_gauche .= '<input id="prixMax" class="range" name="prixMax" type="range" class="form-control" min="0" max="'. $information .'" step="50" /><output class = "price_output"></output><br />';
 		}
-	$contenu_gauche .= '<input type="submit" value="Rechercher" class="btn" />';
-$contenu_gauche .= '</form><br />';
+	$contenu_gauche .= '<input type="submit" value="Rechercher" class="btn" id="btn-recherche" />';
+$contenu_gauche .= '</form>';
  
 
 
 // Pagination
 
-$annoncesParPage = 12;
+$annoncesParPage = 10;
 $annoncesTotalesReq = $pdo->query('SELECT * FROM annonce');
 $annoncesTotales = $annoncesTotalesReq->rowCount();
 $pagesTotales = ceil($annoncesTotales/$annoncesParPage);
@@ -111,17 +111,27 @@ while($annonce = $resultat->fetch(PDO::FETCH_ASSOC)) {
 
 // -------------- AFFICHAGE ---------------
 require_once('inc/haut.inc.php');
+echo $contenu;
 ?>
 
 	<div class="row">
-		<div class="col-xs-3">
+		<div class="col-sm-3">
 			<?php echo $contenu_gauche; ?>
-		</div>
-		<div class="col-xs-9">
-			<div class="row text-center">
-				<span id="mosaique" class="list-group-item glyphicon glyphicon-th col-sm-offset-7 col-sm-1 btn-affichage" aria-hidden="true"></span>
+			<?php
 
-				<form method="get" action="" class="col-sm-4 form-tri">
+			if(isConnected()) {
+				echo '<hr /><div class="row">';
+					echo '<button class="col-sm-offset-1 col-sm-10 btn"><a href="mes_annonces.php?action=ajout"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Ajouter une annonce</a></button>';
+				echo '</div><hr />';
+			}
+			
+			?>
+		</div>
+		<div class="col-sm-9">
+			<div class="row text-center">
+				<span id="mosaique" class="list-group-item glyphicon glyphicon-th-large col-xs-offset-1 col-xs-1 btn-affichage" aria-hidden="true"></span>
+
+				<form method="get" action="" class="col-xs-offset-4 col-xs-6 form-tri">
 					<select class="form-control" name="tri">
 						<option value="croissant" class="list-group-item">Du - cher au + cher</option>
 						<option value="decroissant" class="list-group-item">Du + cher au - cher</option>
@@ -161,7 +171,7 @@ require_once('inc/bas.inc.php');
 ?>
 <script>
   $("#mosaique").click(function () {
-    $(".affichage").toggleClass("col-lg-4");
+    $(".affichage").toggleClass("col-xs-6");
     $(".thumbnail").toggleClass("cadreAnnonce");	
     $(".vignette").toggleClass("pull-left");
     $(".image").toggleClass("image");

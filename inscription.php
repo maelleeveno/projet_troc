@@ -5,34 +5,34 @@ require_once('inc/init.inc.php');
 
 // ----------------------- TRAITEMENTS PHP -----------------------
 
-if(!empty($_POST)) {	
+if(!empty($_POST['pseudo']) || !empty($_POST['mdp']) || !empty($_POST['nom']) || !empty($_POST['prenom']) || !empty($_POST['telephone']) || !empty($_POST['mail']) || !empty($_POST['civilite']) ) {	
 	
 	if(!isset($_POST['pseudo']) || strlen($_POST['pseudo']) < 4 || strlen($_POST['pseudo']) > 20) {
-		$contenu .= '<div class="bg-danger">Le pseudo est incorrect.</div>';	
+		$contenu .= '<div class="bg-danger text-center">Le pseudo est incorrect.</div>';	
 	}
 	if(!isset($_POST['mdp']) || strlen($_POST['mdp']) < 4 || strlen($_POST['mdp']) > 20) {
-		$contenu .= '<div class="bg-danger">Le mot de passe est incorrect.</div>';
+		$contenu .= '<div class="bg-danger text-center">Le mot de passe est incorrect.</div>';
 	}
 	if(!isset($_POST['nom']) || strlen($_POST['nom']) < 2 || strlen($_POST['nom']) > 20) {
-		$contenu .= '<div class="bg-danger">Le nom doit contenir  entre 2 et 20 caractères.</div>';
+		$contenu .= '<div class="bg-danger text-center">Le nom doit contenir  entre 2 et 20 caractères.</div>';
 	}	
 	if(!isset($_POST['prenom']) || strlen($_POST['prenom']) < 2 || strlen($_POST['prenom']) > 20) {
-		$contenu .= '<div class="bg-danger">Le prénom doit contenir  entre 2 et 20 caractères.</div>';
+		$contenu .= '<div class="bg-danger text-center">Le prénom doit contenir  entre 2 et 20 caractères.</div>';
 	}	
 
 	// Vérification Email : 
 	if(!isset($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-		$contenu .= '<div class="bg-danger">Email incorrect.</div>';
+		$contenu .= '<div class="bg-danger text-center">Email incorrect.</div>';
 	}
 	
 	// Téléphone : 
 	if(!isset($_POST['telephone']) || !preg_match('/^[0-9]{10}$/', $_POST['telephone']) ) {	
-		$contenu .= '<div class="bg-danger">Numéro de téléphone incorrect.</div>';
+		$contenu .= '<div class="bg-danger text-center">Numéro de téléphone incorrect.</div>';
 	}
 	
 	// Vérification de la civilité : 
 	if(!isset($_POST['civilite']) || ($_POST['civilite'] != 'm' && $_POST['civilite'] != 'f')) {
-		$contenu .= '<div class="bg-danger">Civilité incorrecte.</div>';
+		$contenu .= '<div class="bg-danger text-center">Civilité incorrecte.</div>';
 	}
 
 	
@@ -41,7 +41,7 @@ if(!empty($_POST)) {
 		$membre = executeReq("SELECT * FROM membre WHERE pseudo = :pseudo", array(':pseudo' => $_POST['pseudo'])); 
 		
 		if($membre->rowCount() > 0) {
-			$contenu .= '<div class="bg-danger">Pseudo indisponible, veuillez en choisir un autre.</div>';
+			$contenu .= '<div class="bg-danger text-center">Pseudo indisponible, veuillez en choisir un autre.</div>';
 		} else {
 			
 			$mdp = md5($_POST['mdp']);	
@@ -54,7 +54,8 @@ if(!empty($_POST)) {
 								 ':email' 		=> $_POST['email'],
 								 ':civilite' 	=> $_POST['civilite']
 						   ));
-							$contenu .= '<div class="bg-success">Vous êtes inscrit. <a href="connexion.php">Cliquez ici pour vous connecter.</a></div>';
+							$contenu .= '<div class="bg-success text-center">Vous êtes inscrit. Cliquez sur "Connexion" dans le menu ou <a href="index.php">revenir à l\'accueil pour se connecter.</a></div>';
+							
 		}
 		
 	} // fin du if (empty($contenu))
@@ -76,7 +77,7 @@ echo $contenu; 	// pour afficher des messages
 	
 	<div class="input-group">
 		<span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
-		<input type="text" name="pseudo" id="pseudo" class="form-control" placeholder="Votre pseudo" aria-describedby="basic-addon1" value="<?php echo $_POST['pseudo'] ?? ''; ?>">
+		<input type="text" name="pseudo" id="pseudo" class="form-control" placeholder="Votre pseudo" autofocus aria-describedby="basic-addon1" value="<?php echo $_POST['pseudo'] ?? ''; ?>">
 	</div><br />
 
 	<div class="input-group">
@@ -106,7 +107,7 @@ echo $contenu; 	// pour afficher des messages
 	
 	<label>Civilité</label>
 	<input type="radio" name="civilite" id="homme" value="m" checked /><label for="homme">Homme</label>
-	<input type="radio" name="civilite" id="femme" value="f" <?php if(isset($_POST['civilite']) && $_POST['civilite'] == 'f') echo 'checked'; ?> /><label for="femme">Femme</label><br />	
+	<input type="radio" name="civilite" id="femme" value="f" <?php if(isset($_POST['civilite']) && $_POST['civilite'] == 'f') echo 'checked'; ?> /><label for="femme">Femme</label><br /><br />
 	
 	<input type="submit" value="S'inscrire" name="inscription" class="btn" />
 </form>

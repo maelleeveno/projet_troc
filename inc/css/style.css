@@ -1,5 +1,19 @@
-body > div:nth-child(14) > div > div.col-md-9 > div > form {
-	width: 30%;
+.navbar {
+	padding: 0 10%;
+}
+
+body a {
+	color: cadetblue;
+}
+
+body a:hover, a:active, a:visited {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+
+body span.btn-affichage {
+	cursor: pointer;
 }
 
 /* Notation éoiles --> avis.php */
@@ -35,6 +49,12 @@ position: absolute;
 
 
 /* Affichage des annonces --> index.php */
+body input#btn-recherche {
+	margin: 0 25%;
+	width: 50%;
+	margin-bottom: 15%;
+}
+
 body span.btn-affichage {
 	height: 33px;
 	width: 44px;
@@ -66,7 +86,7 @@ body img.vignette {
 }
 
 body div.cadreAnnonce {
-	height: 300px;
+	height: auto;
 }
 
 

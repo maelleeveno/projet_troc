@@ -15,7 +15,7 @@ require_once("../inc/init.inc.php");
 // 1- Vérification si Admin :
 if(!isConnectedAndAdmin())
 {
-	header("location:../connexion.php");
+	header("location:../index.php");
 	exit();
 }
 
@@ -25,7 +25,7 @@ if(isset($_GET['action']) && $_GET['action'] == "supprimer_membre" && isset($_GE
 	if ($_SESSION['membre']['id_membre'] != $_GET['id_membre']) {
 		executeReq("DELETE FROM membre WHERE id_membre=:id_membre", array(':id_membre' => $_GET['id_membre']));
 	} else {
-		$contenu .= '<div class="bg-danger">Vous ne pouvez pas supprimer votre propre profil ! </div>';
+		$contenu .= '<div class="bg-danger text-center">Vous ne pouvez pas supprimer votre propre profil ! </div>';
 	}
 	
 }
@@ -37,7 +37,7 @@ if(isset($_GET['action']) && $_GET['action'] == "modifier_statut" && isset($_GET
 		$statut = ($_GET['statut'] == 0) ? 1 : 0;	// si statut = 0 alors il devient 1 sinon devient 0
 		executeReq("UPDATE membre SET statut = '$statut' WHERE id_membre=:id_membre", array(':id_membre' => $_GET['id_membre']));
 	} else {
-		$contenu .= '<div class="bg-danger">Vous ne pouvez pas modifier votre propre profil ! </div>';	
+		$contenu .= '<div class="bg-danger text-center">Vous ne pouvez pas modifier votre propre profil ! </div>';	
 	}
 }
 
@@ -47,21 +47,21 @@ $resultat = executeReq("SELECT id_membre, pseudo, nom, prenom, telephone, email,
 $contenu .= '<h3> Membres inscrits </h3>';
 $contenu .=  "Nombre de membre(s) : " . $resultat->rowCount();
 
-$contenu .=  '<table class="table"> <tr>';
+$contenu .=  '<table class="table table-striped text-center"> <tr>';
 		// Affichage des entêtes :
-		$contenu .=  '<th> id_membre </th>';
-		$contenu .=  '<th> pseudo </th>';
-		$contenu .=  '<th> nom </th>';
-		$contenu .=  '<th> prenom </th>';
-		$contenu .=  '<th> telephone </th>';
-		$contenu .=  '<th> email </th>';
-		$contenu .=  '<th> Date d\'inscription </th>';
-		$contenu .=  '<th> civilite </th>';
-		$contenu .=  '<th> statut </th>';
+		$contenu .=  '<th scope="col"> N° du membre </th>';
+		$contenu .=  '<th scope="col"> Pseudo </th>';
+		$contenu .=  '<th scope="col"> Nom </th>';
+		$contenu .=  '<th scope="col"> Prénom </th>';
+		$contenu .=  '<th scope="col"> Téléphone </th>';
+		$contenu .=  '<th scope="col"> Email </th>';
+		$contenu .=  '<th scope="col"> Date d\'inscription </th>';
+		$contenu .=  '<th scope="col"> Civilite </th>';
+		$contenu .=  '<th scope="col"> Statut </th>';
 				
-		$contenu .=  '<th> Supprimer </th>';
-		$contenu .=  '<th> Modifier Statut </th>';
-		$contenu .=  '<th>Consulter le profil</th>';
+		$contenu .=  '<th scope="col"> Supprimer </th>';
+		$contenu .=  '<th scope="col"> Modifier le statut </th>';
+		$contenu .=  '<th scope="col"> Consulter le profil</th>';
 		$contenu .=  '</tr>';
 
 		// Affichage des lignes :
