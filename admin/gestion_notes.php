@@ -7,7 +7,7 @@ require_once('../inc/init.inc.php');
 // 1- Vérification que le membre est admin et est connecté : 
 if(!isConnectedAndAdmin()) {
 	// Si membre non connecté ou non admin, on le redirige vers la page de connexion :
-	header('location:../connexion.php');	// on demande la page de connexion
+	header('location:../index.php');	// on demande la page de connexion
 	exit();	// on quitte le script.
 } 
 
@@ -18,7 +18,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 							   array(':id_note' => $_GET['id_note']));
 							   
 	if($resultat->rowCount() > 0) {
-		$contenu .= '<div class="bg-success">La note a bien été supprimée !</div>';
+		$contenu .= '<div class="bg-success text-center">La note a bien été supprimée !</div>';
 	}
 }
 
@@ -31,16 +31,16 @@ if(isConnectedAndAdmin()) {
 	$contenu .= '<h3>Gestion des notes et avis </h3>';
 	
 	$contenu .= 'Nombre de notes enregistrées :  ' . $resultat->rowCount();
-	$contenu .= '<table class="table">';
+	$contenu .= '<table class="table table-striped text-center">';
 		// Affichage des entêtes du tableau :
 		$contenu .= '<tr>';
-			$contenu .= '<th>id_note</th>';
-			$contenu .= '<th>note</th>';
-			$contenu .= '<th>avis</th>';
-			$contenu .= '<th>date_enregistrement</th>';
-			$contenu .= '<th>membre acheteur</th>';
-			$contenu .= '<th>membre vendeur</th>';
-			$contenu .= '<th>Action</th>';
+			$contenu .= '<th scope="col">N° de la note</th>';
+			$contenu .= '<th scope="col">Note (sur 5)</th>';
+			$contenu .= '<th scope="col">Avis</th>';
+			$contenu .= '<th scope="col">Date de publication</th>';
+			$contenu .= '<th scope="col">Note donnée par</th>';
+			$contenu .= '<th scope="col">Note reçue par</th>';
+			$contenu .= '<th scope="col">Gestion</th>';
 		$contenu .= '</tr>';
 		
 		// affichage des lignes du tableau : 

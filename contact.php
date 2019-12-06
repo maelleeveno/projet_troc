@@ -1,15 +1,10 @@
 <?php
 require_once('inc/init.inc.php');
 
-/*
-	********************************************************************************************
-	CONFIGURATION
-	********************************************************************************************
-*/
-// destinataire est votre adresse mail. Pour envoyer à plusieurs à la fois, séparez-les par une virgule
+// Pour envoyer à plusieurs à la fois, séparez-les par une virgule
 $destinataire = 'admin@maelleeveno.fr';
  
-// copie ? (envoie une copie au visiteur)
+// copie ?
 $copie = 'oui';
  
 // Action du formulaire (si votre page a des paramètres dans l'URL)
@@ -18,11 +13,11 @@ $copie = 'oui';
 $form_action = '';
  
 // Messages de confirmation du mail
-$message_envoye = '<p class="bg-success">Votre message nous est bien parvenu !</p>';
-$message_non_envoye = '<p class="bg-danger">L\'envoi du mail a échoué, veuillez réessayer SVP.</p>';
+$message_envoye = '<p class="bg-success text-center">Votre message nous est bien parvenu !</p>';
+$message_non_envoye = '<p class="bg-danger text-center">L\'envoi du mail a échoué, veuillez réessayer SVP.</p>';
  
 // Message d'erreur du formulaire
-$message_formulaire_invalide = '<p class="bg-danger"> Vérifiez que tous les champs soient bien remplis et que l\'email soit sans erreur.</p>';
+$message_formulaire_invalide = '<p class="bg-danger text-center"> Vérifiez que tous les champs soient bien remplis et que l\'email soit sans erreur.</p>';
  
 /*
 	********************************************************************************************
@@ -104,17 +99,19 @@ if (isset($_POST['envoi']))
  
 		if ((($copie == 'oui') && ($num_emails == 2)) || (($copie == 'non') && ($num_emails == 1)))
 		{
-			$contenu .= '<p class="bg-success">'.$message_envoye.'</p>';
+			$contenu .= '<p class="bg-success text-center">'.$message_envoye.'</p>';
+			header('location:index.php');
+			exit();
 		}
 		else
 		{
-			$contenu .= '<p class="bg-danger">'.$message_non_envoye.'</p>';
+			$contenu .= '<p class="bg-danger text-center">'.$message_non_envoye.'</p>';
 		};
 	}
 	else
 	{
 		// une des 3 variables (ou plus) est vide ...
-		$contenu .= '<p class="bg-danger">'.$message_formulaire_invalide.'</p>';
+		$contenu .= '<p class="bg-danger text-center">'.$message_formulaire_invalide.'</p>';
 		$err_formulaire = true;
 	};
 }; // fin du if (!isset($_POST['envoi']))

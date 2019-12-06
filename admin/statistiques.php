@@ -5,7 +5,7 @@ require_once('../inc/init.inc.php');
 
 // 1- Vérification que le membre est admin et est connecté : 
 if(!isConnectedAndAdmin()) {
-    header('location:../connexion.php');
+    header('location:../index.php');
     exit();	
 }
 
@@ -31,10 +31,10 @@ if(isConnectedAndAdmin()) {
 
     echo '<div class="collapse" id="top5notes">';
 
-    echo '<table class="table">';
-        echo '<tr>';
-            echo '<th>Membre</th>';
-            echo '<th>Note moyenne</th>';
+    echo '<table class="table table-striped text-center">';
+        echo '<tr">';
+            echo '<th scope="col" class="text-center">Membre</th>';
+            echo '<th scope="col" class="text-center">Note moyenne</th>';
         echo '</tr>';
 
         while($bestNote = $resultat1->fetch(PDO::FETCH_ASSOC)) {
@@ -73,11 +73,11 @@ if(isConnectedAndAdmin()) {
 
     echo '<div class="collapse" id="top5membres">';
 
-    echo '<table class="table">';
+    echo '<table class="table table-striped text-center">';
 
-    echo '<tr>';
-       echo '<th>membre</th>';
-       echo '<th>Nombre d\'avis laissés</th>';
+    echo '<tr">';
+       echo '<th scope="col" class="text-center">membre</th>';
+       echo '<th scope="col" class="text-center">Nombre d\'avis laissés</th>';
     echo '</tr>';
 
     while($activeMember = $resultat2->fetch(PDO::FETCH_ASSOC)) {
@@ -105,11 +105,11 @@ if(isConnectedAndAdmin()) {
 
     echo '<div class="collapse" id="top5annonces">';
 
-    echo '<table class="table">';
+    echo '<table class="table table-striped text-center">';
 
     echo '<tr>';
-       echo '<th>Annonce</th>';
-       echo '<th>Date d\'enregistrement</th>';
+       echo '<th scope="col" class="text-center">Annonce</th>';
+       echo '<th scope="col" class="text-center">Date d\'enregistrement</th>';
     echo '</tr>';
 
     while($oldestPost = $resultat3->fetch(PDO::FETCH_ASSOC)) {
@@ -144,11 +144,11 @@ if(isConnectedAndAdmin()) {
 
     echo '<div class="collapse" id="top5categ">';
 
-    echo '<table class="table">';
+    echo '<table class="table table-striped text-center">';
 
     echo '<tr>';
-       echo '<th>Catégorie</th>';
-       echo '<th>Nombre d\'annonce(s)</th>';
+       echo '<th scope="col" class="text-center">Catégorie</th>';
+       echo '<th scope="col" class="text-center">Nombre d\'annonce(s)</th>';
     echo '</tr>';
 
     while($popularCateg = $resultat4->fetch(PDO::FETCH_ASSOC)) {

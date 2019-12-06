@@ -7,7 +7,7 @@ require_once('inc/init.inc.php');
 // 1- Vérification que le membre est connecté : 
 if(!isConnected()) {
 	// Si membre non connecté ou non admin, on le redirige vers la page de connexion :
-	header('location:connexion.php');	// on demande la page de connexion
+	header('location:index.php');	// on demande la page de connexion
 	exit();	// on quitte le script.
 }
 
@@ -20,7 +20,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 							   array(':id_annonce' => $_GET['id_annonce']));
 							   
 	if($resultat->rowCount() > 0) {
-		$contenu .= '<div class="bg-success">L\'annonce a bien été supprimée !</div>';
+		$contenu .= '<div class="bg-success text-center">L\'annonce a bien été supprimée !</div>';
 	}
 	
 	$_GET['action'] = 'affichage';	// permet de lancer l'affichage des annonces (cf. chapitre 6 ci-dessous).
@@ -33,26 +33,26 @@ if(!empty($_POST)) {	// si le formulaire est soumis
 	// debug($_POST);	
 	
 		// Titre : 
-		if(!isset($_POST['titre']) || strlen($_POST['titre']) < 4 || strlen($_POST['titre']) > 25) {
-			$contenu .= '<div class="bg-danger">Le titre doit être compris entre 4 et 25 caractères. Veuillez saisir un titre correct.</div>';	
+		if(!isset($_POST['titre']) || strlen($_POST['titre']) < 4 || strlen($_POST['titre']) > 50) {
+			$contenu .= '<div class="bg-danger text-center">Le titre doit être compris entre 4 et 25 caractères. Veuillez saisir un titre correct.</div>';	
 		}
 		
 		// Descriptions :
-		if(!isset($_POST['description_courte']) || strlen($_POST['description_courte']) < 10 || strlen($_POST['description_courte']) > 50) {
-			$contenu .= '<div class="bg-danger">La description doit comprendre entre 10 et 50 caractères. Veuillez recommencer votre saisie.</div>';
+		if(!isset($_POST['description_courte']) || strlen($_POST['description_courte']) < 10 || strlen($_POST['description_courte']) > 300) {
+			$contenu .= '<div class="bg-danger text-center">La description doit comprendre entre 10 et 300 caractères. Veuillez recommencer votre saisie.</div>';
 		}
-		if(!isset($_POST['description_longue']) || strlen($_POST['description_longue']) < 10 || strlen($_POST['description_longue']) > 300) {
-			$contenu .= '<div class="bg-danger">La description doit comprendre entre 10 et 300 caractères. Veuillez recommencer votre saisie.</div>';
+		if(!isset($_POST['description_longue']) || strlen($_POST['description_longue']) < 10 || strlen($_POST['description_longue']) > 700) {
+			$contenu .= '<div class="bg-danger text-center">La description doit comprendre entre 10 et 700 caractères. Veuillez recommencer votre saisie.</div>';
 		}
 		
 		// Code postal : 
 		if(!isset($_POST['cp']) || !preg_match('/^[0-9]{5}$/', $_POST['cp']) ) {	
-			$contenu .= '<div class="bg-danger">Code postal incorrect.</div>';
+			$contenu .= '<div class="bg-danger text-center">Code postal incorrect.</div>';
 		}
 		
 		// Adresse :
 		if(!isset($_POST['adresse']) || strlen($_POST['adresse']) < 5 || strlen($_POST['adresse']) > 50) {
-			$contenu .= '<div class="bg-danger">L\'adresse doit comprendre entre 5 et 40 caractères. Veuillez recommencer votre saisie.</div>';
+			$contenu .= '<div class="bg-danger text-center">L\'adresse doit comprendre entre 5 et 40 caractères. Veuillez recommencer votre saisie.</div>';
 		}
 	
 	// Variable qui contiendra le chemin de la photo à insérer (cf. ci-dessous) 
@@ -103,7 +103,7 @@ if(!empty($_POST)) {	// si le formulaire est soumis
 						   ':categorie_id'			=> $_POST['categorie_id']
 					));
 	
-	$contenu .= '<div class="bg-success">L\'annonce a bien été enregistrée.</div>';
+	$contenu .= '<div class="bg-success text-center">L\'annonce a bien été enregistrée.</div>';
 	
 	$_GET['action'] = 'affichage';	// Pour déclencher l'affichage de la table HTML avec tous les annoncess (cf. étape 6 ci-dessous)
 	
@@ -117,22 +117,22 @@ $resultat = executeReq("SELECT id_annonce, titre, description_courte, descriptio
 			array (':membre_id' => $_SESSION['membre']['id_membre'])); // sélectionne tous les annonces 
 
 $contenu .= 'Mes annonces publiées :  ' . $resultat->rowCount();
-$contenu .= '<table class="table">';
+$contenu .= '<table class="table table-striped text-center">';
 	// Affichage des entêtes du tableau :
 	$contenu .= '<tr>';
-		$contenu .= '<th>N° de l\'annonce</th>';
-		$contenu .= '<th>Titre</th>';
-		$contenu .= '<th>Description courte</th>';
-		$contenu .= '<th>Détails</th>';
-		$contenu .= '<th>Prix</th>';
-		$contenu .= '<th>Photo</th>';
-		$contenu .= '<th>Pays</th>';
-		$contenu .= '<th>Ville</th>';
-		$contenu .= '<th>Adresse</th>';
-		$contenu .= '<th>Code postal</th>';
-		$contenu .= '<th>Date de publication</th>';
-		$contenu .= '<th>Catégorie</th>';
-		$contenu .= '<th>Gestion</th>';
+		$contenu .= '<th scope="col">N° de l\'annonce</th>';
+		$contenu .= '<th scope="col">Titre</th>';
+		$contenu .= '<th scope="col">Description courte</th>';
+		$contenu .= '<th scope="col">Détails</th>';
+		$contenu .= '<th scope="col">Prix</th>';
+		$contenu .= '<th scope="col">Photo</th>';
+		$contenu .= '<th scope="col">Pays</th>';
+		$contenu .= '<th scope="col">Ville</th>';
+		$contenu .= '<th scope="col">Adresse</th>';
+		$contenu .= '<th scope="col">Code postal</th>';
+		$contenu .= '<th scope="col">Date de publication</th>';
+		$contenu .= '<th scope="col">Catégorie</th>';
+		$contenu .= '<th scope="col">Gestion</th>';
 	$contenu .= '</tr>';
 	
 	// affichage des lignes du tableau : 

@@ -7,7 +7,7 @@ require_once('../inc/init.inc.php');
 // 1- Vérification que le membre est admin et est connecté : 
 if(!isConnectedAndAdmin()) {
 	// Si membre non connecté ou non admin, on le redirige vers la page de connexion :
-	header('location:../connexion.php');	// on demande la page de connexion
+	header('location:../index.php');	// on demande la page de connexion
 	exit();	// on quitte le script.
 } 
 
@@ -18,7 +18,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 							   array(':id_annonce' => $_GET['id_annonce']));
 							   
 	if($resultat->rowCount() > 0) {
-		$contenu .= '<div class="bg-success">L\'annonce a bien été supprimée !</div>';
+		$contenu .= '<div class="bg-success text-center">L\'annonce a bien été supprimée !</div>';
 	}
 	
 	$_GET['action'] = 'affichage';
@@ -29,23 +29,23 @@ if(isConnectedAndAdmin()) {
 	$resultat = executeReq("SELECT * FROM annonce"); // sélectionne tous les produits 
 	
 	$contenu .= 'Nombre d\'annonces publiées :  ' . $resultat->rowCount();
-	$contenu .= '<table class="table">';
+	$contenu .= '<table class="table table-striped text-center">';
 		// Affichage des entêtes du tableau :
 		$contenu .= '<tr>';
-			$contenu .= '<th>N° de l\'annonce</th>';
-			$contenu .= '<th>Titre</th>';
-			$contenu .= '<th>Description courte</th>';
-			$contenu .= '<th>Description longue</th>';
-			$contenu .= '<th>Prix</th>';
-			$contenu .= '<th>Photo</th>';
-			$contenu .= '<th>Pays</th>';
-			$contenu .= '<th>Ville</th>';
-			$contenu .= '<th>Adresse</th>';
-			$contenu .= '<th>Code postal</th>';
-			$contenu .= '<th>Date de publication</th>';
-			$contenu .= '<th>Membre</th>';
-			$contenu .= '<th>Catégorie</th>';
-			$contenu .= '<th>Action</th>';
+			$contenu .= '<th scope="col">N° de l\'annonce</th>';
+			$contenu .= '<th scope="col">Titre</th>';
+			$contenu .= '<th scope="col">Description courte</th>';
+			$contenu .= '<th scope="col">Description longue</th>';
+			$contenu .= '<th scope="col">Prix</th>';
+			$contenu .= '<th scope="col">Photo</th>';
+			$contenu .= '<th scope="col">Pays</th>';
+			$contenu .= '<th scope="col">Ville</th>';
+			$contenu .= '<th scope="col">Adresse</th>';
+			$contenu .= '<th scope="col">Code postal</th>';
+			$contenu .= '<th scope="col">Date de publication</th>';
+			$contenu .= '<th scope="col">Membre</th>';
+			$contenu .= '<th scope="col">Catégorie</th>';
+			$contenu .= '<th scope="col">Gestion</th>';
 		$contenu .= '</tr>';
 		
 		// affichage des lignes du tableau : 
@@ -55,7 +55,7 @@ if(isConnectedAndAdmin()) {
 				// on parcourt les informations du tableau associatif $annonce : 
 				foreach($annonce as $indice => $information) {
 					if($indice =='description_longue' && strlen($information) >= 70) {
-						$contenu .= '<td>' .substr($information, 0, 70) . ' [...]</td>';
+						$contenu .= '<td>' .substr($information, 0, 70) . ' <a href="../fiche_annonce.php?id_annonce='. $annonce['id_annonce'] .'">[...]</a></td>';
 					}elseif($indice == 'photo') {	// on met une balise <img /> pour la photo
 						$contenu .= '<td><img src="../'. $information .'" width="90" height="90"/></td>';
 					}elseif($indice == 'membre_id') {

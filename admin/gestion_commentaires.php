@@ -7,7 +7,7 @@ require_once('../inc/init.inc.php');
 // 1- Vérification que le membre est admin et est connecté : 
 if(!isConnectedAndAdmin()) {
 	// Si membre non connecté ou non admin, on le redirige vers la page de connexion :
-	header('location:../connexion.php');	// on demande la page de connexion
+	header('location:../index.php');	// on demande la page de connexion
 	exit();	// on quitte le script.
 } 
 
@@ -19,7 +19,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 							   array(':id_commentaire' => $_GET['id_commentaire']));
 							   
 	if($resultat->rowCount() > 0) {
-		$contenu .= '<div class="bg-success">Le commentaire a bien été supprimé !</div>';
+		$contenu .= '<div class="bg-success text-center">Le commentaire a bien été supprimé !</div>';
 	}
 	
 	$_GET['action'] = 'affichage';	// permet de lancer l'affichage des catégories (cf. chapitre 6 ci-dessous).
@@ -29,20 +29,20 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_GET['id
 // 2- Affichage des commentaires
 if(isConnectedAndAdmin()) {
 	$resultat = executeReq("SELECT commentaire.id_commentaire, commentaire.commentaire, commentaire.date_enregistrement, membre.pseudo, commentaire.annonce_id 
-						    FROM annonce 
-							LEFT JOIN membre ON annonce.membre_id = membre.id_membre
-							RIGHT JOIN commentaire ON annonce.id_annonce = commentaire.annonce_id");
+						    FROM annonce, commentaire, membre
+							WHERE annonce.id_annonce = commentaire.annonce_id 
+							AND commentaire.membre_id = membre.id_membre");
 
 	$contenu .= 'Nombre de commentaire :  ' . $resultat->rowCount();
-	$contenu .= '<table class="table">';
+	$contenu .= '<table class="table table-striped text-center">';
 		// Affichage des entêtes du tableau :
 		$contenu .= '<tr>';
-			$contenu .= '<th>N° du commentaire</th>';
-			$contenu .= '<th>Commentaire</th>';
-			$contenu .= '<th>Publié le</th>';
-			$contenu .= '<th>Membre</th>';
-			$contenu .= '<th>Annonce</th>';
-			$contenu .= '<th>Supprimer</th>';
+			$contenu .= '<th scope="col">N° du commentaire</th>';
+			$contenu .= '<th scope="col">Commentaire</th>';
+			$contenu .= '<th scope="col">Publié le</th>';
+			$contenu .= '<th scope="col">Membre</th>';
+			$contenu .= '<th scope="col">Annonce</th>';
+			$contenu .= '<th scope="col">Suppression</th>';
 		$contenu .= '</tr>';
 		
 		// affichage des lignes du tableau : 
@@ -50,11 +50,7 @@ if(isConnectedAndAdmin()) {
 			$contenu .= '<tr>';
 				// on parcourt les informations du tableau associatif $categorie : 
 				foreach($commentaire as $indice => $information) {
-					if($indice == 'pseudo' && empty($information)) {
-						$contenu .= '<td><i>Membre supprimé</i></td>';
-					}elseif($indice == 'annonce_id' && empty($information)) {
-						$contenu .= '<td><i>Annonce supprimée</i></td>';
-					}elseif($indice == 'annonce_id') {
+					if($indice == 'annonce_id') {
 						$resultatAnnonce = executeReq("SELECT * FROM annonce WHERE id_annonce = $information");
 						$idAnnonce = $resultatAnnonce->fetch(PDO::FETCH_ASSOC);
 						$contenu .= '<td><a href="../fiche_annonce.php?id_annonce='. $idAnnonce['id_annonce'] .'">' . $idAnnonce['titre'] . '</a></td>'; 

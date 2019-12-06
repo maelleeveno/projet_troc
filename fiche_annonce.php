@@ -37,17 +37,17 @@ if (isset($_GET['id_annonce'])) {
 
 
 // Enregistrement du commentaire
-if(!empty($_POST)) {	
+if(isset($_POST['validation']) && !empty($_POST)) {	
 
 	if(!isset($_POST['commentaire'])){
-		$contenu .= '<div class="bg-danger">Pas de commentaire</div>';
+		$contenu .= '<div class="bg-danger text-center">Pas de commentaire</div>';
 	}
 	
 	if(empty($contenu)){
 		$membreConnecte = $_SESSION['membre'];
 		executeReq("INSERT INTO commentaire (membre_id, annonce_id, commentaire, date_enregistrement) VALUES (:membre, :annonce, :commentaire, NOW())",
 			array(	':membre'				=> $membreConnecte['id_membre'],
-							':annonce'			=> $_GET['id_annonce'],
+							':annonce'		=> $_GET['id_annonce'],
 							':commentaire' 	=> $_POST['commentaire']
 			));
 			// debug($membreConnecte);
@@ -64,7 +64,8 @@ $resultat = executeReq("SELECT *
 						AND id_annonce <> :id_annonce 
 						ORDER BY RAND() 
 						LIMIT 4", 
-						array(':categorie_id' => $annonce['categorie_id'], ':id_annonce' => $_GET['id_annonce']));
+						array(':categorie_id' => $annonce['categorie_id'], 
+							  ':id_annonce' => $_GET['id_annonce']));
 
 
 while ($vignette = $resultat->fetch(PDO::FETCH_ASSOC)) {
@@ -82,35 +83,44 @@ echo $contenu;
 ?>	
 
 	<div class="row">
-
-		<div class="col-lg-6">
+		<div class="col-sm-3">
 			<br><a href="index.php"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Retour vers les annonces</a>
 		</div>
+
+		<div class="col-sm-offset-2 col-sm-2 text-center">
+			<button class="btn" data-toggle="modal" data-target="#ModalContact">Contacter <?php echo $membre_actuel['pseudo']; ?></button>
+		</div>
 		
-		<div class="col-lg-8">
+		<?php if(isConnected()) : ?>
+		<div class="col-sm-3 text-center">
+			<button class="btn"><a href="mon_compte.php?membre_id=<?php echo $membre_actuel['id_membre']; ?>">Voir le profil de <?php echo $membre_actuel['pseudo']; ?></a></button>
+		</div>
+		<?php endif; ?>
+
+		<div class="col-sm-2 text-center">
+			<button class="btn" type="button" data-toggle="modal" data-target="#ModalCommentaire">Laisser un commentaire</button>
+		</div>
+	</div>	
+	
+	<div class="row">
+		<div class="col-sm-12">
 			<h1 class="page-header"><?php echo $annonce['titre']; ?></h1>
 		</div>
-		
-		<div class="col-lg-2">
-			<input class="btn" type="button" value="Contacter <?php echo $membre_actuel['pseudo']; ?>" data-toggle="modal" data-target="#ModalContact">
-		</div>
-
-		<div class="col-lg-2">
-			<input class="btn" type="button" value="Laisser un commentaire" data-toggle="modal" data-target="#ModalCommentaire">
-		</div>
+	</div>
 	
+	<div class="row">
 		<div class="col-md-6">
 			<img class="img-responsive" src="<?php echo $annonce['photo']; ?>">
 		</div>
 		
 		<div class="col-md-6">
-			<h3>Détails de l'annonce</h3><hr />			
+			<h3>Détails de l'annonce</h3><br />			
 			<p><?php echo $annonce['description_courte']; ?></p><br />
 
 			<a data-toggle="collapse" href="#infos" aria-expanded="false" aria-controls="infos"><h5><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Plus de renseignements</h5></a><br />
-			<div class="collapse" id="infos"><?php echo $annonce['description_longue']; ?></div><br />
+			<div class="collapse" id="infos"><?php echo $annonce['description_longue']; ?></div><hr />
 
-			<p>Mots-clés :
+			<p class="align-bottom">Mots-clés :
 			<?php
 				$resultatCat = executeReq("SELECT * FROM categorie, annonce WHERE categorie.id_categorie = annonce.categorie_id AND annonce.id_annonce = :id_annonce", array(':id_annonce' => $_GET['id_annonce']));
 				$motscles = $resultatCat->fetch(PDO::FETCH_ASSOC);
@@ -125,49 +135,66 @@ echo $contenu;
 	
 	<!-- Modal -->
 	<div id="ModalContact" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
+		<div class="modal-dialog">
 
 		<!-- Modal content-->
-		<div class="modal-content">
-		  <div class="modal-header">
-			<h4 class="modal-title">Votre contact</h4>
-		  </div>
-		  <div class="modal-body">
-			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> : <?php echo '<a href="mon_compte.php?membre_id='. $membre_actuel['id_membre'] .'">' . $membre_actuel['pseudo'] . '</a>'; ?><br>
-			<span class="glyphicon glyphicon-phone-alt"></span> : <?php echo $membre_actuel['telephone']; ?><br>
-			<span class="glyphicon glyphicon-envelope"></span> : <a href="mailto:<?php echo $membre_actuel['email']; ?>"><?php echo $membre_actuel['email']; ?></a></p>
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		  </div>
-		</div>
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Votre contact</h4>
+				</div>
 
-	  </div>
+				<div class="modal-body">
+
+					<?php if(isConnected()) : ?>
+					<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> : <?php echo '<a href="mon_compte.php?membre_id='. $membre_actuel['id_membre'] .'">' . $membre_actuel['pseudo'] . '</a>'; ?><br>
+					<span class="glyphicon glyphicon-phone-alt"></span> : <?php echo $membre_actuel['telephone']; ?><br>
+					<span class="glyphicon glyphicon-envelope"></span> : <a href="mailto:<?php echo $membre_actuel['email']; ?>"><?php echo $membre_actuel['email']; ?></a></p>
+					<?php endif; ?>
+		  
+					<?php if(!isConnected()) : ?>
+					<div class="bg-alert text-center">Vous n'êtes pas connecté. Veuillez vous connecter pour afficher les informations de contact du membre.</div>
+					<?php endif; ?>
+
+				</div>
+		
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+	
+		</div>
 	</div>	
 	
 	<!-- Modal -->
 	<div id="ModalCommentaire" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
+		<div class="modal-dialog">
 
-		<!-- Modal content-->
-		<div class="modal-content">
-		  <div class="modal-header">
-			<h4 class="modal-title">Laissez un commentaire à <?php echo $membre_actuel['pseudo']; ?> à propos de l'annonce " <?php echo $annonce['titre']; ?> "</h4>
-		  </div>
-		  <div class="modal-body">
-			
-			<form method="post" action="">
-				<textarea name="commentaire" id="commentaire" class="form-control" rows="7" cols="60"></textarea><br /><br />
-				<input type="submit" value="Publier" name="validation" class="btn" />
-			</form>
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Laissez un commentaire à <?php echo $membre_actuel['pseudo']; ?> à propos de l'annonce " <?php echo $annonce['titre']; ?> "</h4>
+				</div>
 
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		  </div>
+				<div class="modal-body">
+
+					<?php if(isConnected()) : ?>
+					<form method="post" action="">
+						<textarea name="commentaire" id="commentaire" class="form-control" rows="7" cols="60" autofocus></textarea><br /><br />
+						<input type="submit" value="Publier" name="validation" class="btn" />
+					</form>
+					<?php endif; ?>
+
+					<?php if(!isConnected()) : ?>
+					<div class="bg-alerte text-center">Vous n'êtes pas connecté. Veuillez vous connecter pour laisser un commentaire.</div>
+					<?php endif; ?>					
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
 		</div>
-
-	  </div>
 	</div>
 
 
@@ -181,7 +208,13 @@ echo $contenu;
 		</div>
 		
 		<div class="col-lg-3">
-			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <a href="mon_compte.php?membre_id= <?php echo $annonce['membre_id']; ?> "><?php echo $membre_actuel['pseudo'];?></a></p>
+			<?php if(isConnected()) : ?>
+			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <a href="mon_compte.php?membre_id= <?php echo $annonce['membre_id']; ?> "> <?php echo $membre_actuel['pseudo'];?></a></p>
+			<? endif; ?>
+
+			<?php if(!isConnected()) : ?>
+			<p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?php echo $membre_actuel['pseudo'];?></p>
+			<? endif; ?>
 		</div>
 		
 		<div class="col-lg-3">
@@ -214,16 +247,17 @@ echo $contenu;
 			<h3 id="commentaires">Commentaires :</h3><hr />
 			<?php 
 
-			$resultatCom = executeReq("SELECT * 
+			$resultatCom = executeReq("SELECT commentaire.*, membre.id_membre, membre.pseudo 
 									   FROM commentaire, membre 
 									   WHERE commentaire.annonce_id = :id_annonce 
 									   AND commentaire.membre_id = membre.id_membre
 									   ORDER BY commentaire.date_enregistrement DESC", 
 									   array(':id_annonce' => $_GET['id_annonce'])); 
 			while($affichage = $resultatCom->fetch(PDO::FETCH_ASSOC)) {
+				$dateFr = new DateTime($affichage['date_enregistrement']);
 				echo '<div class="thumbnail">';
-				echo '<p><strong>Avis déposé par <a href="mon_compte.php?membre_id='. $affichage['id_membre'] .'">'. $affichage['pseudo'] . '</a> le ' . $dateFr->format('d/m/Y à H:i:s') .'</strong></p>';
-				echo '<p>'. $affichage['commentaire'] .'</p>'; 
+					echo '<p><strong>Avis déposé par <a href="mon_compte.php?membre_id='. $affichage['id_membre'] .'">'. $affichage['pseudo'] . '</a> le ' . $dateFr->format('d/m/Y à H:i:s') .'</strong></p><br />';
+					echo '<p>'. $affichage['commentaire'] .'</p>'; 
 				echo '</div>';
 			}
 

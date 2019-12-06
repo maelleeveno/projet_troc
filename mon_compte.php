@@ -3,7 +3,7 @@ require_once('inc/init.inc.php');
 
 // 1- Cas du visiteur non connecté :
 if (!isConnected()) {
-	header('location:connexion.php');  // on redirige le visiteur vers la page de connexion
+	header('location:index.php');  // on redirige le visiteur vers la page de connexion
 	exit();
 }
 
@@ -15,7 +15,7 @@ if (isset($_GET['membre_id'])) {
 		
 	if ($resultat->rowCount() == 0) {
 		// s'il n'y a pas de ligne dans le jeu de résultat, c'est que le membre n'est pas ou plus en BDD :
-        $contenu .= '<div class="bg-danger">Le membre recherché n\'existe plus.</div>';	
+        $contenu .= '<div class="bg-danger text-center">Le membre recherché n\'existe plus.</div>';	
         header('location:index.php');
 		exit();
 	}
@@ -42,7 +42,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_SESSION
 							   array(':id_membre' => $_SESSION['membre']['id_membre']));
 							   
 	if($resultat->rowCount() > 0) {
-		$contenu .= '<div class="bg-success">Votre profil a bien été supprimé !</div>';
+		$contenu .= '<div class="bg-success text-center">Votre profil a bien été supprimé !</div>';
 	}
 
 	unset($_SESSION['membre']);
@@ -56,23 +56,23 @@ if(isset($_GET['action']) && $_GET['action'] == 'suppression' && isset($_SESSION
 if(!empty($_POST)) {	
 	
 	if(!isset($_POST['pseudo']) || strlen($_POST['pseudo']) < 4 || strlen($_POST['pseudo']) > 20) {
-		$contenu .= '<div class="bg-danger">Le pseudo est incorrect.</div>';	
+		$contenu .= '<div class="bg-danger text-center">Le pseudo est incorrect.</div>';	
 	}
 	if(!isset($_POST['nom']) || strlen($_POST['nom']) < 2 || strlen($_POST['nom']) > 20) {
-		$contenu .= '<div class="bg-danger">Le nom doit contenir  entre 2 et 20 caractères.</div>';
+		$contenu .= '<div class="bg-danger text-center">Le nom doit contenir  entre 2 et 20 caractères.</div>';
 	}	
 	if(!isset($_POST['prenom']) || strlen($_POST['prenom']) < 2 || strlen($_POST['prenom']) > 20) {
-		$contenu .= '<div class="bg-danger">Le prénom doit contenir  entre 2 et 20 caractères.</div>';
+		$contenu .= '<div class="bg-danger text-center">Le prénom doit contenir  entre 2 et 20 caractères.</div>';
 	}	
 
 	// Vérification Email : 
 	if(!isset($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-		$contenu .= '<div class="bg-danger">Email incorrect.</div>';
+		$contenu .= '<div class="bg-danger text-center">Email incorrect.</div>';
 	}
 	
 	// Téléphone : 
 	if(!isset($_POST['telephone']) || !preg_match('/^[0-9]{10}$/', $_POST['telephone']) ) {	
-		$contenu .= '<div class="bg-danger">Numéro de téléphone incorrect.</div>';
+		$contenu .= '<div class="bg-danger text-center">Numéro de téléphone incorrect.</div>';
 	}
 
 
@@ -83,7 +83,7 @@ if(!empty($_POST)) {
 
 		
 		if($membre->rowCount() > 0) {
-			$contenu .= '<div class="bg-danger">Pseudo indisponible, veuillez en choisir un autre.</div>';
+			$contenu .= '<div class="bg-danger text-center">Pseudo indisponible, veuillez en choisir un autre.</div>';
 		}
 
 		// Enregistrement des modifications du membre : 
@@ -102,7 +102,7 @@ if(!empty($_POST)) {
 			   ':id_membre'				=> $_GET['membre_id']
 		));
 
-$contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !</div>';
+$contenu .= '<div class="bg-success text-center">Vos modifications ont été enregistrées !</div>';
 
 // header('location:mon_compte.php?membre_id=' . echo $_SESSION['membre']['id_membre'] .'');
 
@@ -130,7 +130,7 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 	$noteMoyenne = $resultat2->fetch(PDO::FETCH_ASSOC);
 
 	if(isConnected() && $_GET['membre_id'] == $_SESSION['membre']['id_membre']) {
-		$contenu .= '<p class="bg-success" style="text-align: center;">Bonjour <strong>' . $_SESSION['membre']['pseudo'] . '</strong>, bienvenue sur votre espace membre </p>';
+		$contenu .= '<p class="bg-success text-center">Bonjour <strong>' . $_SESSION['membre']['pseudo'] . '</strong>, bienvenue sur votre espace membre </p>';
 		$contenu .= '<div><h3>Voici vos informations de profil';
 		$contenu .= '<a href="?action=modification&membre_id='. $membre['id_membre'] .'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>';
 		$contenu .= '<a href="?action=suppression&membre_id='. $membre['id_membre'] .'" onclick="return(confirm(\'Êtes-vous certain de vouloir supprimer votre profil ?\'));"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
@@ -150,7 +150,7 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 
 		$contenu .= '<div class="collapse" id="avis">';
 
-		$resultat3 = executeReq("SELECT * 
+		$resultat3 = executeReq("SELECT note.*, membre.pseudo, membre.id_membre 
 								 FROM note, membre 
 								 WHERE note.membre_id2 = :membre_id
 								 AND note.membre_id1 = membre.id_membre", 
@@ -160,9 +160,11 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 			// $resultat = executeReq("SELECT * FROM membre WHERE id_membre IN (SELECT id_membre FROM note WHERE id_membre = membre_id1)");
 			// $membre1 = $resultat->fetch(PDO::FETCH_ASSOC);
 	
+			$contenu .= '<div class="thumbnail">';
 			$contenu .= '<p><strong>Avis déposé par <a href="mon_compte.php?membre_id='. $avis['id_membre'] .'">'. $avis['pseudo'] . '</a> le ' . $avis['date_enregistrement'] .'</strong></p>';
-			$contenu .= '<p>Note : '. $avis['note'] .' / 5</p>'; 
-			$contenu .= '<p>'. $avis['avis'] .'</p><hr />'; 
+			$contenu .= '<p>Note : '. $avis['note'] .' / 5</p><br />'; 
+			$contenu .= '<p>'. $avis['avis'] .'</p>'; 
+			$contenu .= '</div>';
 		}
 
 		$contenu .= '</div>';
@@ -181,12 +183,18 @@ $contenu .= '<div class="bg-success">Vos modifications ont été enregistrées !
 		$contenu .= '<h4><a data-toggle="collapse" href="#avis" aria-expanded="false" aria-controls="avis"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Les avis reçus par '. $membre['pseudo'] .' : </a></h4><hr />';
 
 		$contenu .= '<div class="collapse" id="avis">';
-		$resultat3 = executeReq("SELECT * FROM note, membre WHERE note.membre_id2 = :membre_id AND note.membre_id1 = membre.id_membre", array('membre_id' => $_GET['membre_id'])); 
+		$resultat3 = executeReq("SELECT note.*, membre.pseudo, membre.id_membre 
+								 FROM note, membre 
+								 WHERE note.membre_id2 = :membre_id 
+								 AND note.membre_id1 = membre.id_membre", 
+								 array('membre_id' => $_GET['membre_id'])); 
 		while($avis = $resultat3->fetch(PDO::FETCH_ASSOC)) {	
-			$dateFr = new DateTime($avis['date_enregistrement']);		
+			$dateFr = new DateTime($avis['date_enregistrement']);	
+			$contenu .= '<div class="thumbnail">';	
 			$contenu .= '<p><strong>Avis déposé par <a href="mon_compte.php?membre_id='. $avis['id_membre'] .'">'. $avis['pseudo'] . '</a> le ' . $dateFr->format('d/m/Y à H:i:s') .'</strong></p>';
-			$contenu .= '<p>Note : '. $avis['note'] .' / 5</p>'; 
-			$contenu .= '<p>'. $avis['avis'] .'</p><hr />'; 	
+			$contenu .= '<p>Note : '. $avis['note'] .' / 5</p><br />'; 
+			$contenu .= '<p>'. $avis['avis'] .'</p>'; 	
+			$contenu .= '</div>';
 		}
 		$contenu .= '</div>';
 	} 
