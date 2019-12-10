@@ -59,22 +59,22 @@ if(isset($_POST['validation']) && !empty($_POST)) {
 
 // Affichage des suggestions 
 $resultat = executeReq("SELECT * 
-						FROM annonce 
-						WHERE categorie_id = :categorie_id 
-						AND id_annonce <> :id_annonce 
-						ORDER BY RAND() 
-						LIMIT 4", 
-						array(':categorie_id' => $annonce['categorie_id'], 
-							  ':id_annonce' => $_GET['id_annonce']));
+			FROM annonce 
+			WHERE categorie_id = :categorie_id 
+			AND id_annonce <> :id_annonce 
+			ORDER BY RAND() 
+			LIMIT 4", 
+			array(':categorie_id' => $annonce['categorie_id'], 
+				  ':id_annonce' => $_GET['id_annonce']));
 
 
 while ($vignette = $resultat->fetch(PDO::FETCH_ASSOC)) {
 	$suggestion .= 	'<div class="col-md-2">
-						<h4>' . $vignette['titre'] . '</h4>	
-						<a href="fiche_annonce.php?id_annonce= ' . $vignette['id_annonce'] . '">
-							<img style ="width:200px" class="img-responsive" src="' . $vignette['photo'] . '">
-						</a>
-					</div>';
+				<h4>' . $vignette['titre'] . '</h4>	
+				<a href="fiche_annonce.php?id_annonce= ' . $vignette['id_annonce'] . '">
+					<img style ="width:200px" class="img-responsive" src="' . $vignette['photo'] . '">
+				</a>
+			</div>';
 }
 
 //-------------------- AFFICHAGE ----------------------
